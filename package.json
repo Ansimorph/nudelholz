@@ -1,0 +1,43 @@
+{
+  "name": "k2synth",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@react-midi/hooks": "^0.0.10",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "astroturf": "^0.10.2",
+    "react": "^16.13.0",
+    "react-addons-update": "^15.6.2",
+    "react-dom": "^16.13.0",
+    "react-scripts": "3.4.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "react-app-rewire-postcss": "^3.0.2",
+    "react-app-rewired": "^2.1.5"
+  }
+}
