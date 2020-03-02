@@ -5,7 +5,7 @@ const MIDI_START = 24; // Buttons start at C1 in the bottom left corner
 const MIDI_NUMBER_OF_BUTTONS = 16;
 const BUTTON_ROW_WIDTH = 4;
 
-const SequencerMidiButtons = React.memo(({ input, clickHandler }) => {
+const SequencerMidiButtons = React.memo(({ input, clickHandler, xOffset }) => {
   const noteEvent = useMIDINote(input);
 
   const handleButtonPress = () => {
@@ -18,7 +18,7 @@ const SequencerMidiButtons = React.memo(({ input, clickHandler }) => {
       const x = (noteEvent.note - MIDI_START) % 4;
       const y =
         BUTTON_ROW_WIDTH - 1 - Math.floor((noteEvent.note - MIDI_START) / 4);
-      clickHandler({ x: x, y: y });
+      clickHandler({ x: x + xOffset, y: y });
     }
   };
 

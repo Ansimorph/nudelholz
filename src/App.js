@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMIDI, useMIDIControl } from "@react-midi/hooks";
 import SequencerGrid from "./components/SequencerGrid";
 import SequencerMidiGrid from "./components/SequencerMidiGrid";
 import SequencerMidiButtons from "./components/SequencerMidiButtons";
+import SequencerMidiTransportControls from "./components/SequencerMidiTransportControls";
+
 import update from "react-addons-update";
 import { Sequence, Transport } from "tone";
 
@@ -13,6 +15,7 @@ const App = () => {
   // Y-Position is counted from top to bottom
   const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(0));
   const [currentStep, setCurrentStep] = useState(0);
+  const [xOffset, setXOffset] = useState(0);
 
   useEffect(
     () => {
@@ -46,6 +49,19 @@ const App = () => {
     }
   };
 
+  const moveXOffset = useCallback(amount => {
+    setXOffset(offset =>
+      clamp({
+        number: offset + amount,
+        max: STEP_COUNT - GRID_WIDTH
+      })
+    );
+  }, []);
+
+  const clamp = ({ number, min = 0, max }) => {
+    return Math.min(Math.max(number, min), max);
+  };
+
   return (
     <div>
       <SequencerGrid
@@ -57,13 +73,18 @@ const App = () => {
           <SequencerMidiGrid
             grid={cropGrid({
               grid: sequence2Grid(sequence, currentStep),
-              xOffset: 0,
+              xOffset: xOffset,
               xWidth: GRID_WIDTH
             })}
             output={outputs[0]}
           />
           <SequencerMidiButtons
             clickHandler={handleGridClick}
+            xOffset={xOffset}
+            input={inputs[0]}
+          />
+          <SequencerMidiTransportControls
+            moveXOffset={moveXOffset}
             input={inputs[0]}
           />
           <MIDIControlLog input={inputs[0]} />
@@ -76,7 +97,7 @@ const App = () => {
 const cropGrid = ({ grid, xOffset, xWidth }) => {
   const croppedArray = [];
   for (let i = 0; i < grid.length; i++) {
-    croppedArray.push(grid[i].slice(xOffset, xWidth));
+    croppedArray.push(grid[i].slice(xOffset, xWidth + xOffset));
   }
   return croppedArray;
 };
