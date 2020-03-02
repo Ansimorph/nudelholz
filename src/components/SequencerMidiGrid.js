@@ -38,7 +38,7 @@ const SequencerMidiGrid = ({ grid, output }) => {
               MIDI_CHANNEL
             );
             break;
-          case "active":
+          case "playing":
             noteOn(
               MIDI_START + count + COLOR_OFFSET.orange,
               MIDI_VELOCITY,

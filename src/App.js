@@ -7,9 +7,11 @@ import update from "react-addons-update";
 import { Sequence, Transport } from "tone";
 
 const App = () => {
+  const STEP_COUNT = 8;
+  const GRID_WIDTH = 4;
   const [inputs, outputs] = useMIDI();
   // Y-Position is counted from top to bottom
-  const [sequence, setSequence] = useState([1, 1, 2, 3]);
+  const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(0));
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(
@@ -22,7 +24,7 @@ const App = () => {
         (time, step) => {
           setCurrentStep(step);
         },
-        [0, 1, 2, 3],
+        fillArrayWithStepNumbers(STEP_COUNT),
         "4n"
       );
 
@@ -33,6 +35,10 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  const fillArrayWithStepNumbers = length => {
+    return new Array(length).fill().map((value, index) => index);
+  };
 
   const handleGridClick = ({ x, y }) => {
     if (sequence[x] !== y) {
@@ -49,7 +55,11 @@ const App = () => {
       {inputs.length >= 1 && (
         <div>
           <SequencerMidiGrid
-            grid={sequence2Grid(sequence, currentStep)}
+            grid={cropGrid({
+              grid: sequence2Grid(sequence, currentStep),
+              xOffset: 0,
+              xWidth: GRID_WIDTH
+            })}
             output={outputs[0]}
           />
           <SequencerMidiButtons
@@ -63,6 +73,14 @@ const App = () => {
   );
 };
 
+const cropGrid = ({ grid, xOffset, xWidth }) => {
+  const croppedArray = [];
+  for (let i = 0; i < grid.length; i++) {
+    croppedArray.push(grid[i].slice(xOffset, xWidth));
+  }
+  return croppedArray;
+};
+
 const sequence2Grid = (sequence, currentStep) => {
   const GRID_HEIGHT = 4;
   const grid = [];
@@ -70,14 +88,12 @@ const sequence2Grid = (sequence, currentStep) => {
   for (let i = 0; i < GRID_HEIGHT; i++) {
     grid.push([]);
     for (let j = 0; j < sequence.length; j++) {
+      grid[i].push("off");
       if (j === currentStep) {
-        grid[i].push("playing");
-      } else {
-        if (sequence[j] === i) {
-          grid[i].push("on");
-        } else {
-          grid[i].push("off");
-        }
+        grid[i][j] = "playing";
+      }
+      if (sequence[j] === i) {
+        grid[i][j] = "on";
       }
     }
   }

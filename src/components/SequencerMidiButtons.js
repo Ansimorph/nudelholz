@@ -22,12 +22,9 @@ const SequencerMidiButtons = React.memo(({ input, clickHandler }) => {
     }
   };
 
-  useEffect(
-    () => {
-      handleButtonPress();
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  useEffect(() => {
+    handleButtonPress();
+  });
 
   return null;
 });
