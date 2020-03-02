@@ -1,14 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMIDI, useMIDIControl } from "@react-midi/hooks";
 import SequencerGrid from "./components/SequencerGrid";
 import SequencerMidiGrid from "./components/SequencerMidiGrid";
 import SequencerMidiButtons from "./components/SequencerMidiButtons";
 import update from "react-addons-update";
+import { Sequence, Transport } from "tone";
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
   // Y-Position is counted from top to bottom
   const [sequence, setSequence] = useState([1, 1, 2, 3]);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(
+    () => {
+      Transport.bpm.value = 60;
+      Transport.seconds = 0;
+      Transport.stop();
+
+      const seq = new Sequence(
+        (time, step) => {
+          setCurrentStep(step);
+        },
+        [0, 1, 2, 3],
+        "4n"
+      );
+
+      seq.start();
+
+      Transport.start();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handleGridClick = ({ x, y }) => {
     if (sequence[x] !== y) {
@@ -16,32 +40,44 @@ const App = () => {
     }
   };
 
-  if (inputs.length < 1) return <div>No MIDI Inputs</div>;
-
   return (
     <div>
       <SequencerGrid
-        grid={sequence2Grid(sequence)}
+        grid={sequence2Grid(sequence, currentStep)}
         clickHandler={handleGridClick}
       />
-      <SequencerMidiGrid grid={sequence2Grid(sequence)} output={outputs[0]} />
-      <SequencerMidiButtons clickHandler={handleGridClick} input={inputs[0]} />
-      <MIDIControlLog input={inputs[0]} />
+      {inputs.length >= 1 && (
+        <div>
+          <SequencerMidiGrid
+            grid={sequence2Grid(sequence, currentStep)}
+            output={outputs[0]}
+          />
+          <SequencerMidiButtons
+            clickHandler={handleGridClick}
+            input={inputs[0]}
+          />
+          <MIDIControlLog input={inputs[0]} />
+        </div>
+      )}
     </div>
   );
 };
 
-const sequence2Grid = sequence => {
+const sequence2Grid = (sequence, currentStep) => {
   const GRID_HEIGHT = 4;
   const grid = [];
 
   for (let i = 0; i < GRID_HEIGHT; i++) {
     grid.push([]);
     for (let j = 0; j < sequence.length; j++) {
-      if (sequence[j] === i) {
-        grid[i].push("red");
+      if (j === currentStep) {
+        grid[i].push("playing");
       } else {
-        grid[i].push("off");
+        if (sequence[j] === i) {
+          grid[i].push("on");
+        } else {
+          grid[i].push("off");
+        }
       }
     }
   }

@@ -2,12 +2,21 @@ import React from "react";
 import styled from "astroturf";
 
 const Button = styled("button")`
-  color: black;
-  border: 1px solid black;
-  background-color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
 
-  &.color-red {
-    color: red;
+  &.color-off {
+    background-color: lightgray;
+  }
+
+  &.color-on {
+    background-color: red;
+  }
+
+  &.color-playing {
+    background-color: orange;
   }
 `;
 
@@ -21,12 +30,11 @@ const SequencerGrid = ({ grid, clickHandler }) => {
               <td key={rowIndex + columnIndex}>
                 <Button
                   color={cell}
+                  aria-label={cell}
                   onClick={e => {
                     clickHandler({ x: columnIndex, y: rowIndex });
                   }}
-                >
-                  {cell}
-                </Button>
+                ></Button>
               </td>
             ))}
           </tr>

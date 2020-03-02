@@ -11,13 +11,15 @@
     "react": "^16.13.0",
     "react-addons-update": "^15.6.2",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "tone": "^13.8.25"
   },
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "eject": "react-app-rewired eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,6 +40,7 @@
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "react-app-rewire-postcss": "^3.0.2",
-    "react-app-rewired": "^2.1.5"
+    "react-app-rewired": "^2.1.5",
+    "source-map-explorer": "^2.3.1"
   }
 }
