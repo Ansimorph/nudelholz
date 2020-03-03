@@ -2,21 +2,24 @@ import React from "react";
 import styled from "astroturf";
 
 const Button = styled("button")`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 51% 49% 53% 47% / 58% 50% 50% 42%;
   border: none;
+  cursor: pointer;
+  margin: 2px;
 
   &.color-off {
-    background-color: lightgray;
+    background-color: var(--white);
+    opacity: 30%;
   }
 
   &.color-on {
-    background-color: red;
+    background-color: var(--yellow);
   }
 
   &.color-playing {
-    background-color: orange;
+    background-color: var(--blue);
   }
 `;
 
