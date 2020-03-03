@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useMIDI, useMIDIControl } from "@react-midi/hooks";
 import SequencerGrid from "./components/SequencerGrid";
 import SequencerMidiGrid from "./components/SequencerMidiGrid";
@@ -6,16 +6,18 @@ import SequencerMidiButtons from "./components/SequencerMidiButtons";
 import SequencerMidiTransportControls from "./components/SequencerMidiTransportControls";
 
 import update from "react-addons-update";
-import { Sequence, Transport } from "tone";
+import { Sequence, Transport, OmniOscillator } from "tone";
 
 const App = () => {
   const STEP_COUNT = 8;
   const GRID_WIDTH = 4;
+  const NOTE_MAPPING = ["F4", "G#4", "Bb4", "C4"];
   const [inputs, outputs] = useMIDI();
   // Y-Position is counted from top to bottom
   const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(0));
   const [currentStep, setCurrentStep] = useState(0);
   const [xOffset, setXOffset] = useState(0);
+  let omniOsc = useRef();
 
   useEffect(
     () => {
@@ -23,21 +25,37 @@ const App = () => {
       Transport.seconds = 0;
       Transport.stop();
 
-      const seq = new Sequence(
-        (time, step) => {
-          setCurrentStep(step);
-        },
-        fillArrayWithStepNumbers(STEP_COUNT),
-        "4n"
-      );
-
-      seq.start();
+      omniOsc.current = new OmniOscillator("C#4", "fatsawtooth");
+      omniOsc.current.toMaster();
 
       Transport.start();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  useEffect(() => {
+    const seq = new Sequence(
+      (time, step) => {
+        setFrequency(step);
+        setCurrentStep(step);
+      },
+      fillArrayWithStepNumbers(STEP_COUNT),
+      "4n"
+    );
+
+    seq.start(0);
+    omniOsc.current.start();
+
+    return function cleanup() {
+      seq.dispose();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sequence]);
+
+  const setFrequency = step => {
+    omniOsc.current.set("frequency", NOTE_MAPPING[sequence[step]]);
+  };
 
   const fillArrayWithStepNumbers = length => {
     return new Array(length).fill().map((value, index) => index);
