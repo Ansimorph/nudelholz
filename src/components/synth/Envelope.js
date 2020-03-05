@@ -4,21 +4,31 @@ import styled from "astroturf";
 import {
   CircularInput,
   CircularTrack,
-  CircularProgress,
-  CircularThumb
+  CircularProgress
 } from "react-circular-input";
 
 const StyledCircularProgress = styled(CircularProgress)`
   stroke: var(--yellow);
-`;
-
-const StyledCircularThumb = styled(CircularThumb)`
-  fill: var(--white);
+  stroke-width: var(--stroke-width);
 `;
 
 const StyledCircularTrack = styled(CircularTrack)`
   stroke: var(--white);
+  stroke-width: var(--stroke-width);
   opacity: 0.3;
+`;
+
+const Label = styled("text")`
+  fill: var(--yellow);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+`;
+
+const ControlElement = styled("article")`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Oscillator = ({ trigger, register }) => {
@@ -44,15 +54,31 @@ const Oscillator = ({ trigger, register }) => {
   }, [trigger]);
 
   useEffect(() => {
-    ampEnv.current.set("attack", attack);
+    ampEnv.current.set("attack", Number(attack));
   }, [attack]);
 
   return (
-    <CircularInput value={attack} onChange={setAttack}>
-      <StyledCircularTrack />
-      <StyledCircularProgress />
-      <StyledCircularThumb />
-    </CircularInput>
+    <ControlElement>
+      <CircularInput
+        value={attack}
+        onChange={setAttack}
+        radius="40"
+        aria-labelledby="label"
+      >
+        <StyledCircularTrack />
+        <StyledCircularProgress />
+        <Label
+          id="label"
+          x={40}
+          y={40}
+          textAnchor="middle"
+          dy="0.3em"
+          fontWeight="bold"
+        >
+          Rise
+        </Label>
+      </CircularInput>
+    </ControlElement>
   );
 };
 export default Oscillator;

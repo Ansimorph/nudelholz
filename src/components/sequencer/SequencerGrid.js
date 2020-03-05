@@ -4,7 +4,7 @@ import styled from "astroturf";
 const Button = styled("button")`
   width: 40px;
   height: 40px;
-  border-radius: 51% 49% 53% 47% / 58% 50% 50% 42%;
+  border-radius: 50%;
   border: none;
   cursor: pointer;
   margin: 2px;

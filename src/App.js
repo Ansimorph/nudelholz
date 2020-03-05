@@ -8,18 +8,13 @@ import Envelope from "./components/synth/Envelope";
 import Sequencer from "./components/sequencer/Sequencer";
 
 css`
-  @font-face {
-    font-family: "clickbait";
-    src: url("/clickbait.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-  }
-
   :root {
     --yellow: #f1fa8c;
     --blue: #8bf9de;
     --red: #ff5555;
     --white: #eee;
+
+    --stroke-width: 10;
   }
 
   html {
