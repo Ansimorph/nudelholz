@@ -60,6 +60,9 @@ const Oscillator = ({ trigger, register }) => {
   return (
     <ControlElement>
       <CircularInput
+        aria-valuemin="0"
+        aria-valuemax="1"
+        aria-valuenow={attack}
         value={attack}
         onChange={setAttack}
         radius="40"
