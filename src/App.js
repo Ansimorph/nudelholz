@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Sequencer from "./components/sequencer/Sequencer";
 import { useMIDI } from "@react-midi/hooks";
 import Synth from "./components/synth/Synth";
+import { OmniOscillator, AmplitudeEnvelope } from "tone";
 import styled, { css } from "astroturf";
 
 css`
@@ -51,16 +52,39 @@ const Title = styled("h1")`
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
-  const [frequency, setFrequency] = useState(0);
+
+  let omniOsc = useRef();
+  let ampEnv = useRef();
+
+  useEffect(() => {
+    ampEnv.current = new AmplitudeEnvelope({
+      attack: 1,
+      decay: 1,
+      sustain: 1,
+      release: 1
+    }).toMaster();
+
+    omniOsc.current = new OmniOscillator("C#4", "fatsawtooth");
+    omniOsc.current.connect(ampEnv.current).start();
+  }, []);
+
+  const setFrequency = frequency => {
+    omniOsc.current.set("frequency", frequency);
+  };
+
+  const triggerEnvelope = time => {
+    ampEnv.current.triggerAttackRelease(time);
+  };
 
   return (
     <MainElement>
       <Title>nudelholz</Title>
-      <Synth frequency={frequency} />
+      <Synth />
       <Sequencer
         midiInput={inputs[0]}
         midiOutput={outputs[0]}
         setFrequency={setFrequency}
+        triggerEnvelope={triggerEnvelope}
       />
     </MainElement>
   );

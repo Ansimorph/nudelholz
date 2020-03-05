@@ -9,7 +9,12 @@ import SequencerMidiGrid from "./SequencerMidiGrid";
 import SequencerMidiButtons from "./SequencerMidiButtons";
 import SequencerMidiTransportControls from "./SequencerMidiTransportControls";
 
-const Sequencer = ({ midiInput, midiOutput, setFrequency }) => {
+const Sequencer = ({
+  midiInput,
+  midiOutput,
+  setFrequency,
+  triggerEnvelope
+}) => {
   const STEP_COUNT = 8;
   const GRID_WIDTH = 4;
   const NOTE_MAPPING = ["F4", "G#4", "Bb4", "C4"];
@@ -32,6 +37,7 @@ const Sequencer = ({ midiInput, midiOutput, setFrequency }) => {
     const seq = new Sequence(
       (time, step) => {
         setFrequency(NOTE_MAPPING[sequence[step]]);
+        triggerEnvelope(0.6);
         setCurrentStep(step);
       },
       fillArrayWithAscendingNumbers(STEP_COUNT),
