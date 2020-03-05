@@ -10,6 +10,7 @@
     "astroturf": "^0.10.2",
     "react": "^16.13.0",
     "react-addons-update": "^15.6.2",
+    "react-circular-input": "^0.1.6",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
     "tone": "^13.8.25"

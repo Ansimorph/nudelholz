@@ -11,7 +11,7 @@ const Button = styled("button")`
 
   &.color-off {
     background-color: var(--white);
-    opacity: 30%;
+    opacity: 0.3;
   }
 
   &.color-on {

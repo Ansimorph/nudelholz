@@ -8526,6 +8526,11 @@ react-app-rewired@^2.1.5:
   dependencies:
     semver "^5.6.0"
 
+react-circular-input@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/react-circular-input/-/react-circular-input-0.1.6.tgz#e7b26817ca5b8f3a2de4b8d0c62b76961134ffc7"
+  integrity sha512-MELeTANICDuky+vJ/dLf7+dPufNajfAPeU5glo7dgcDsC0gEAJJ9MaVOTy3FsU9xcXC2G122qPBQNXMMlKYJng==
+
 react-dev-utils@^10.2.0:
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.0.tgz#b11cc48aa2be2502fb3c27a50d1dfa95cfa9dfe0"
