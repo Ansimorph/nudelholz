@@ -37,7 +37,7 @@ const Sequencer = ({
     const seq = new Sequence(
       (time, step) => {
         setFrequency(NOTE_MAPPING[sequence[step]]);
-        triggerEnvelope(0.6);
+        triggerEnvelope({ duration: 0.6, time: time });
         setCurrentStep(step);
       },
       fillArrayWithAscendingNumbers(STEP_COUNT),
@@ -50,7 +50,7 @@ const Sequencer = ({
       seq.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sequence]);
+  }, [sequence, setFrequency, triggerEnvelope]);
 
   const handleGridClick = ({ x, y }) => {
     if (sequence[x] !== y) {

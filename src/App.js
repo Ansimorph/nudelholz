@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import Sequencer from "./components/sequencer/Sequencer";
+import React, { useState, useEffect } from "react";
 import { useMIDI } from "@react-midi/hooks";
-import Synth from "./components/synth/Synth";
-import { OmniOscillator, AmplitudeEnvelope } from "tone";
 import styled, { css } from "astroturf";
+import Tone from "tone";
+
+import Oscillator from "./components/synth/Oscillator";
+import Envelope from "./components/synth/Envelope";
+import Sequencer from "./components/sequencer/Sequencer";
 
 css`
   @font-face {
@@ -52,39 +54,30 @@ const Title = styled("h1")`
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
+  const [frequency, setFrequency] = useState(0);
 
-  let omniOsc = useRef();
-  let ampEnv = useRef();
+  const [oscillatorRef, setOscillatorRef] = useState();
+  const [envelopeRef, setEnvelopeRef] = useState();
 
+  const [trigger, setTrigger] = useState([]);
+
+  // Setup Wiring between audio nodes
   useEffect(() => {
-    ampEnv.current = new AmplitudeEnvelope({
-      attack: 1,
-      decay: 1,
-      sustain: 1,
-      release: 1
-    }).toMaster();
-
-    omniOsc.current = new OmniOscillator("C#4", "fatsawtooth");
-    omniOsc.current.connect(ampEnv.current).start();
-  }, []);
-
-  const setFrequency = frequency => {
-    omniOsc.current.set("frequency", frequency);
-  };
-
-  const triggerEnvelope = time => {
-    ampEnv.current.triggerAttackRelease(time);
-  };
+    if (oscillatorRef && envelopeRef) {
+      Tone.connect(oscillatorRef, envelopeRef);
+    }
+  }, [oscillatorRef, envelopeRef]);
 
   return (
     <MainElement>
       <Title>nudelholz</Title>
-      <Synth />
+      <Oscillator register={setOscillatorRef} frequency={frequency} />
+      <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
       <Sequencer
         midiInput={inputs[0]}
         midiOutput={outputs[0]}
         setFrequency={setFrequency}
-        triggerEnvelope={triggerEnvelope}
+        triggerEnvelope={setTrigger}
       />
     </MainElement>
   );
