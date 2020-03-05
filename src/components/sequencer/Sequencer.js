@@ -36,7 +36,7 @@ const Sequencer = ({
   useEffect(() => {
     const seq = new Sequence(
       (time, step) => {
-        setFrequency(NOTE_MAPPING[sequence[step]]);
+        setFrequency({frequency: NOTE_MAPPING[sequence[step]], time: time});
         triggerEnvelope({ duration: 0.6, time: time });
         setCurrentStep(step);
       },

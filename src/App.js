@@ -54,7 +54,7 @@ const Title = styled("h1")`
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
-  const [frequency, setFrequency] = useState(0);
+  const [frequency, setFrequency] = useState({ frequency: 0, time: 0 });
 
   const [oscillatorRef, setOscillatorRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();

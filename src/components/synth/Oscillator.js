@@ -12,7 +12,7 @@ const Oscillator = ({ frequency, register }) => {
   }, []);
 
   useEffect(() => {
-    omniOsc.current.set("frequency", frequency);
+    omniOsc.current.set("frequency", frequency.frequency, frequency.time);
   }, [frequency]);
 
   return <div></div>;
