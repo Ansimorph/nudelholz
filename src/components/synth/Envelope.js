@@ -1,48 +1,25 @@
 import React, { useRef, useEffect, useState } from "react";
 import { AmplitudeEnvelope } from "tone";
-import styled from "astroturf";
-import {
-  CircularInput,
-  CircularTrack,
-  CircularProgress
-} from "react-circular-input";
-
-const StyledCircularProgress = styled(CircularProgress)`
-  stroke: var(--yellow);
-  stroke-width: var(--stroke-width);
-`;
-
-const StyledCircularTrack = styled(CircularTrack)`
-  stroke: var(--white);
-  stroke-width: var(--stroke-width);
-  opacity: 0.3;
-`;
-
-const Label = styled("text")`
-  fill: var(--yellow);
-  font-family: "IBM Plex Sans", sans-serif;
-  font-size: 22px;
-  font-weight: 500;
-`;
-
-const ControlElement = styled("article")`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import Encoder from "../ui/Encoder";
+import Group from "../ui/Group";
 
 const Oscillator = ({ trigger, register }) => {
   let ampEnv = useRef();
 
   const [attack, setAttack] = useState(1);
+  const [decay, setDecay] = useState(1);
 
   useEffect(() => {
     ampEnv.current = new AmplitudeEnvelope({
-      attack: 1,
-      decay: 1,
-      sustain: 1,
-      release: 1
+      attack: attack,
+      decay: decay,
+      sustain: 0,
+      release: 0.01
     }).toMaster();
+
+    ampEnv.current.attackCurve = "exponential";
+    ampEnv.current.decayCurve = "exponential";
+
     register(ampEnv.current);
     // eslint-disable-next-line
   }, []);
@@ -54,34 +31,20 @@ const Oscillator = ({ trigger, register }) => {
   }, [trigger]);
 
   useEffect(() => {
-    ampEnv.current.set("attack", Number(attack));
+    ampEnv.current.set("attack", attack * 2);
   }, [attack]);
 
+  useEffect(() => {
+    ampEnv.current.set("decay", decay * 2);
+  }, [decay]);
+
   return (
-    <ControlElement>
-      <CircularInput
-        aria-valuemin="0"
-        aria-valuemax="1"
-        aria-valuenow={attack}
-        value={attack}
-        onChange={setAttack}
-        radius="40"
-        aria-labelledby="label"
-      >
-        <StyledCircularTrack />
-        <StyledCircularProgress />
-        <Label
-          id="label"
-          x={40}
-          y={40}
-          textAnchor="middle"
-          dy="0.3em"
-          fontWeight="bold"
-        >
-          Rise
-        </Label>
-      </CircularInput>
-    </ControlElement>
+    <div>
+      <Group title="Envelope">
+        <Encoder value={attack} onChange={setAttack} label="Rise"></Encoder>
+        <Encoder value={decay} onChange={setDecay} label="Fall"></Encoder>
+      </Group>
+    </div>
   );
 };
 export default Oscillator;
