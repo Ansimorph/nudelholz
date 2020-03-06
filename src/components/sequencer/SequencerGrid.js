@@ -9,9 +9,13 @@ const Button = styled("button")`
   cursor: pointer;
   margin: 2px;
 
+  &:focus {
+    outline: none;
+    box-shadow: var(--focus-box-shadow);
+  }
+
   &.color-off {
-    background-color: var(--white);
-    opacity: 0.3;
+    background-color: var(--inactive);
   }
 
   &.color-on {

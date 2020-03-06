@@ -6,6 +6,8 @@ import {
   CircularProgress
 } from "react-circular-input";
 
+const StyledCircularInput = styled(CircularInput)``;
+
 const StyledCircularProgress = styled(CircularProgress)`
   stroke: var(--yellow);
   stroke-width: var(--stroke-width);
@@ -13,9 +15,8 @@ const StyledCircularProgress = styled(CircularProgress)`
 `;
 
 const StyledCircularTrack = styled(CircularTrack)`
-  stroke: var(--white);
+  stroke: var(--inactive);
   stroke-width: var(--stroke-width);
-  opacity: 0.3;
 `;
 
 const Label = styled("text")`
@@ -30,12 +31,17 @@ const ControlElement = styled("article")`
   flex-direction: column;
   align-items: center;
   padding: 4px;
+  border-radius: 50%;
+
+  &:focus-within {
+    box-shadow: var(--focus-box-shadow);
+  }
 `;
 
 const Encoder = ({ value, onChange, label }) => {
   return (
     <ControlElement>
-      <CircularInput
+      <StyledCircularInput
         aria-valuemin="0"
         aria-valuemax="1"
         aria-valuenow={value}
@@ -56,7 +62,7 @@ const Encoder = ({ value, onChange, label }) => {
         >
           {label}
         </Label>
-      </CircularInput>
+      </StyledCircularInput>
     </ControlElement>
   );
 };

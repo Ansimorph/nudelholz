@@ -13,9 +13,10 @@ css`
     --blue: #6bd5ff;
     --red: #ff4444;
     --white: #eee;
+    --inactive: #ff6d72;
 
+    --focus-box-shadow: 0 0 0 4px #6bd5ff;
     --font: "pirata", sans-serif;
-
     --stroke-width: 8;
   }
 
