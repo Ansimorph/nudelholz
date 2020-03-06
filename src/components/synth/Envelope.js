@@ -1,48 +1,73 @@
 import React, { useRef, useEffect, useState } from "react";
-import { AmplitudeEnvelope } from "tone";
+import { Envelope, Gain, Signal, CrossFade } from "tone";
 import Encoder from "../ui/Encoder";
 import Group from "../ui/Group";
 
 const Oscillator = ({ trigger, register }) => {
-  let ampEnv = useRef();
+  let envelope = useRef();
+  let gain = useRef();
+  let linearSignal = useRef();
+  let crossFade = useRef();
 
   const [attack, setAttack] = useState(0.25);
   const [decay, setDecay] = useState(0.25);
+  const [envelopeGain, setEnvelopeGain] = useState(0.5);
 
   useEffect(() => {
-    ampEnv.current = new AmplitudeEnvelope({
+    envelope.current = new Envelope({
       attack: attack,
       decay: decay,
       sustain: 0,
-      release: 0.01
-    }).toMaster();
+      release: 0.01,
+      attackCurve: "exponential",
+      decayCurve: "exponential"
+    });
 
-    ampEnv.current.attackCurve = "exponential";
-    ampEnv.current.decayCurve = "exponential";
+    gain.current = new Gain({
+      gain: 0
+    });
 
-    register(ampEnv.current);
+    linearSignal.current = new Signal(1);
+
+    crossFade.current = new CrossFade(0);
+
+    envelope.current.connect(crossFade.current, 0, 0);
+    linearSignal.current.connect(crossFade.current, 0, 1);
+
+    crossFade.current.connect(gain.current.gain);
+
+    register(gain.current);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (trigger) {
-      ampEnv.current.triggerAttackRelease(trigger.duration, trigger.time);
+      envelope.current.triggerAttackRelease(trigger.duration, trigger.time);
     }
   }, [trigger]);
 
   useEffect(() => {
-    ampEnv.current.set("attack", attack * 2);
+    envelope.current.set("attack", attack * 2);
   }, [attack]);
 
   useEffect(() => {
-    ampEnv.current.set("decay", decay * 2);
+    envelope.current.set("decay", decay * 2);
   }, [decay]);
+
+  useEffect(() => {
+    crossFade.current.fade.value = 1 - envelopeGain;
+  }, [envelopeGain]);
 
   return (
     <div>
       <Group title="Envelope">
         <Encoder value={attack} onChange={setAttack} label="Rise"></Encoder>
         <Encoder value={decay} onChange={setDecay} label="Fall"></Encoder>
+        <Encoder
+          value={envelopeGain}
+          onChange={setEnvelopeGain}
+          label="Gain"
+        ></Encoder>
       </Group>
     </div>
   );

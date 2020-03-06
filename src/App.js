@@ -67,6 +67,7 @@ const App = () => {
   useEffect(() => {
     if (oscillatorRef && envelopeRef) {
       Tone.connect(oscillatorRef, envelopeRef);
+      Tone.connect(envelopeRef, Tone.Master);
     }
   }, [oscillatorRef, envelopeRef]);
 
