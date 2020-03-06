@@ -9,6 +9,7 @@ import {
 const StyledCircularProgress = styled(CircularProgress)`
   stroke: var(--yellow);
   stroke-width: var(--stroke-width);
+  stroke-linecap: butt;
 `;
 
 const StyledCircularTrack = styled(CircularTrack)`
@@ -19,16 +20,16 @@ const StyledCircularTrack = styled(CircularTrack)`
 
 const Label = styled("text")`
   fill: var(--yellow);
-  font-family: "IBM Plex Sans", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: normal;
 `;
 
 const ControlElement = styled("article")`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5px;
+  padding: 4px;
 `;
 
 const Encoder = ({ value, onChange, label }) => {

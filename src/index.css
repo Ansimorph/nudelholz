@@ -3,8 +3,8 @@ body {
 }
 
 @font-face {
-  font-family: "clickbait";
-  src: url("/clickbait.woff2") format("woff2");
+  font-family: "pirata";
+  src: url("/PirataOne.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }

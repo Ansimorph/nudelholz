@@ -1,23 +1,30 @@
 import React from "react";
 import styled from "astroturf";
 
-const StyledGroup = styled("div")`
-  display: flex;
+const StyledGroup = styled("div")``;
+
+const StyledEncoderGroup = styled("div")`
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  gap: 12px;
 `;
 
 const GroupHeading = styled("h2")`
-  font-family: "IBM Plex Sans", sans-serif;
-  font-size: 22px;
-  font-weight: 500;
+  padding-left: 4px;
+  margin: 0 0 8px 0;
+  font-family: var(--font);
+  font-size: 28px;
+  font-weight: normal;
   color: var(--yellow);
 `;
 
 const Group = ({ title, children }) => {
   return (
-    <div>
+    <StyledGroup>
       <GroupHeading>{title}</GroupHeading>
-      <StyledGroup>{children}</StyledGroup>
-    </div>
+      <StyledEncoderGroup>{children}</StyledEncoderGroup>
+    </StyledGroup>
   );
 };
 export default Group;

@@ -9,12 +9,14 @@ import Sequencer from "./components/sequencer/Sequencer";
 
 css`
   :root {
-    --yellow: #f1fa8c;
-    --blue: #8bf9de;
-    --red: #ff5555;
+    --yellow: #f3ff6b;
+    --blue: #6bd5ff;
+    --red: #ff4444;
     --white: #eee;
 
-    --stroke-width: 10;
+    --font: "pirata", sans-serif;
+
+    --stroke-width: 8;
   }
 
   html {
@@ -39,12 +41,12 @@ const MainElement = styled("main")`
 
 const Title = styled("h1")`
   text-align: center;
-  font-family: Clickbait, sans-serif;
-  font-size: 150px;
+  font-family: var(--font);
+  font-size: 100px;
   color: var(--yellow);
   line-height: 0.8;
   font-weight: normal;
-  margin: 0;
+  margin: 0 0 40px 0;
 `;
 
 const App = () => {
