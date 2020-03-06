@@ -36,7 +36,7 @@ const Sequencer = ({
   useEffect(() => {
     const seq = new Sequence(
       (time, step) => {
-        setFrequency({frequency: NOTE_MAPPING[sequence[step]], time: time});
+        setFrequency({ frequency: NOTE_MAPPING[sequence[step]], time: time });
         triggerEnvelope({ duration: 0.6, time: time });
         setCurrentStep(step);
       },
@@ -114,11 +114,12 @@ const sequence2Grid = (sequence, currentStep) => {
     grid.push([]);
     for (let j = 0; j < sequence.length; j++) {
       grid[i].push("off");
-      if (j === currentStep) {
-        grid[i][j] = "playing";
-      }
       if (sequence[j] === i) {
-        grid[i][j] = "on";
+        if (j === currentStep) {
+          grid[i][j] = "playing";
+        } else {
+          grid[i][j] = "on";
+        }
       }
     }
   }
