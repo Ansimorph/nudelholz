@@ -6,8 +6,8 @@ import Group from "../ui/Group";
 const Oscillator = ({ trigger, register }) => {
   let ampEnv = useRef();
 
-  const [attack, setAttack] = useState(1);
-  const [decay, setDecay] = useState(1);
+  const [attack, setAttack] = useState(0.25);
+  const [decay, setDecay] = useState(0.25);
 
   useEffect(() => {
     ampEnv.current = new AmplitudeEnvelope({

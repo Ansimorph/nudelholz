@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import update from "react-addons-update";
 import { Sequence, Transport } from "tone";
 import clamp from "../../util/clamp";
@@ -8,13 +8,9 @@ import SequencerGrid from "./SequencerGrid";
 import SequencerMidiGrid from "./SequencerMidiGrid";
 import SequencerMidiButtons from "./SequencerMidiButtons";
 import SequencerMidiTransportControls from "./SequencerMidiTransportControls";
+import MidiContext from "../../midiContext";
 
-const Sequencer = ({
-  midiInput,
-  midiOutput,
-  setFrequency,
-  triggerEnvelope
-}) => {
+const Sequencer = ({ setFrequency, triggerEnvelope }) => {
   const STEP_COUNT = 8;
   const GRID_WIDTH = 4;
   const NOTE_MAPPING = ["F4", "G#4", "Bb4", "C4"];
@@ -22,6 +18,8 @@ const Sequencer = ({
   const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(0));
   const [currentStep, setCurrentStep] = useState(0);
   const [xOffset, setXOffset] = useState(0);
+
+  const { midiInput } = useContext(MidiContext);
 
   useEffect(
     () => {
@@ -81,17 +79,12 @@ const Sequencer = ({
               xOffset: xOffset,
               xWidth: GRID_WIDTH
             })}
-            output={midiOutput}
           />
           <SequencerMidiButtons
             clickHandler={handleGridClick}
             xOffset={xOffset}
-            input={midiInput}
           />
-          <SequencerMidiTransportControls
-            moveXOffset={moveXOffset}
-            input={midiInput}
-          />
+          <SequencerMidiTransportControls moveXOffset={moveXOffset} />
         </div>
       )}
     </div>

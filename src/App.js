@@ -3,6 +3,7 @@ import { useMIDI } from "@react-midi/hooks";
 import styled, { css } from "astroturf";
 import Tone from "tone";
 
+import MidiContext from "./midiContext";
 import Oscillator from "./components/synth/Oscillator";
 import Envelope from "./components/synth/Envelope";
 import Sequencer from "./components/sequencer/Sequencer";
@@ -52,12 +53,15 @@ const Title = styled("h1")`
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
+
   const [frequency, setFrequency] = useState({ frequency: 0, time: 0 });
 
   const [oscillatorRef, setOscillatorRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
 
   const [trigger, setTrigger] = useState([]);
+
+  const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
 
   // Setup Wiring between audio nodes
   useEffect(() => {
@@ -67,17 +71,14 @@ const App = () => {
   }, [oscillatorRef, envelopeRef]);
 
   return (
-    <MainElement>
-      <Title>nudelholz</Title>
-      <Oscillator register={setOscillatorRef} frequency={frequency} />
-      <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
-      <Sequencer
-        midiInput={inputs[0]}
-        midiOutput={outputs[0]}
-        setFrequency={setFrequency}
-        triggerEnvelope={setTrigger}
-      />
-    </MainElement>
+    <MidiContext.Provider value={midi}>
+      <MainElement>
+        <Title>nudelholz</Title>
+        <Oscillator register={setOscillatorRef} frequency={frequency} />
+        <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
+        <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
+      </MainElement>
+    </MidiContext.Provider>
   );
 };
 export default App;

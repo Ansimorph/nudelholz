@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useMIDIControl } from "@react-midi/hooks";
+import MidiContext from "../../midiContext";
 
-const SequencerMidiTransportControls = React.memo(({ input, moveXOffset }) => {
-  const noteEvent = useMIDIControl(input);
+const SequencerMidiTransportControls = React.memo(({ moveXOffset }) => {
+  const { midiInput } = useContext(MidiContext);
+  const noteEvent = useMIDIControl(midiInput);
 
   const handleInteraction = () => {
     if (noteEvent.control === 20) {
