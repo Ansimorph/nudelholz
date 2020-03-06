@@ -7,7 +7,8 @@ const Button = styled("button")`
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  margin: 2px;
+  margin-right: 4px;
+  margin-bottom: 4px;
 
   &:focus {
     outline: none;
@@ -27,9 +28,13 @@ const Button = styled("button")`
   }
 `;
 
+const Table = styled("table")`
+  border-spacing: 0;
+`;
+
 const SequencerGrid = ({ grid, clickHandler }) => {
   return (
-    <table>
+    <Table>
       <tbody>
         {grid.map((row, rowIndex) => (
           <tr key={rowIndex}>
@@ -47,7 +52,7 @@ const SequencerGrid = ({ grid, clickHandler }) => {
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 
