@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "lodash": "^4.17.15",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "react-app-rewire-postcss": "^3.0.2",

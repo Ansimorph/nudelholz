@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "astroturf";
 import {
   CircularInput,
   CircularTrack,
   CircularProgress
 } from "react-circular-input";
+import { uniqueId } from "lodash";
 
 const StyledCircularInput = styled(CircularInput)``;
 
@@ -39,6 +40,12 @@ const ControlElement = styled("article")`
 `;
 
 const Encoder = ({ value, onChange, label }) => {
+  const id = useRef();
+
+  useEffect(() => {
+    id.current = uniqueId("label_");
+  }, []);
+
   return (
     <ControlElement>
       <StyledCircularInput
@@ -48,12 +55,12 @@ const Encoder = ({ value, onChange, label }) => {
         value={value}
         onChange={onChange}
         radius="40"
-        aria-labelledby="label"
+        aria-labelledby={id.current}
       >
         <StyledCircularTrack />
         <StyledCircularProgress />
         <Label
-          id="label"
+          id={id.current}
           x={40}
           y={40}
           textAnchor="middle"
