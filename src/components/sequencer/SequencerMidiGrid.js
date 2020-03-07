@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useMIDIOutput } from "@react-midi/hooks";
-import MidiContext from "../../midiContext";
+import MidiContext, { MIDI_CHANNEL } from "../../midiContext";
 
 const MIDI_START = 24; // Buttons start at C1 in the bottom left corner
 const COLOR_OFFSET = {
@@ -8,7 +8,6 @@ const COLOR_OFFSET = {
   orange: 36,
   green: 72
 };
-const MIDI_CHANNEL = 15;
 const MIDI_VELOCITY = 127;
 
 const SequencerMidiGrid = ({ grid }) => {

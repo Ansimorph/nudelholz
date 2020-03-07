@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import styled from "astroturf";
 import {
   CircularInput,
@@ -6,6 +6,8 @@ import {
   CircularProgress
 } from "react-circular-input";
 import { uniqueId } from "lodash";
+import MidiContext, { MIDI_CHANNEL } from "../../midiContext";
+import { useMIDIControl } from "@react-midi/hooks";
 
 const StyledCircularInput = styled(CircularInput)``;
 
@@ -39,8 +41,20 @@ const ControlElement = styled("article")`
   }
 `;
 
-const Encoder = ({ value, onChange, label }) => {
+const Encoder = ({ value, onChange, label, midiCC }) => {
   const id = useRef();
+  const { midiInput } = useContext(MidiContext);
+  const midiControl = useMIDIControl(midiInput, {
+    control: midiCC,
+    channel: MIDI_CHANNEL
+  });
+
+  useEffect(() => {
+    if (midiInput) {
+      onChange(midiControl.value / 127);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [midiControl.value, midiInput]);
 
   useEffect(() => {
     id.current = uniqueId("label_");

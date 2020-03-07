@@ -61,12 +61,23 @@ const Oscillator = ({ trigger, register }) => {
   return (
     <div>
       <Group title="Envelope">
-        <Encoder value={attack} onChange={setAttack} label="Rise"></Encoder>
-        <Encoder value={decay} onChange={setDecay} label="Fall"></Encoder>
+        <Encoder
+          value={attack}
+          onChange={setAttack}
+          label="Rise"
+          midiCC={8}
+        ></Encoder>
+        <Encoder
+          value={decay}
+          onChange={setDecay}
+          label="Fall"
+          midiCC={9}
+        ></Encoder>
         <Encoder
           value={envelopeGain}
           onChange={setEnvelopeGain}
           label="Gain"
+          midiCC={10}
         ></Encoder>
       </Group>
     </div>
