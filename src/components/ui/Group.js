@@ -4,10 +4,9 @@ import styled from "astroturf";
 const StyledGroup = styled("div")``;
 
 const StyledEncoderGroup = styled("div")`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min-content;
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 const GroupHeading = styled("h2")`

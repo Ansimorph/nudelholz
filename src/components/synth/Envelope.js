@@ -1,7 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Envelope, Gain, Signal, CrossFade } from "tone";
+import styled from "astroturf";
 import Encoder from "../ui/Encoder";
 import Group from "../ui/Group";
+
+const StyledEnvelope = styled("div")`
+  grid-area: env;
+`;
 
 const Oscillator = ({ trigger, register }) => {
   let envelope = useRef();
@@ -59,7 +64,7 @@ const Oscillator = ({ trigger, register }) => {
   }, [envelopeGain]);
 
   return (
-    <div>
+    <StyledEnvelope>
       <Group title="Envelope">
         <Encoder
           value={attack}
@@ -80,7 +85,7 @@ const Oscillator = ({ trigger, register }) => {
           midiCC={10}
         ></Encoder>
       </Group>
-    </div>
+    </StyledEnvelope>
   );
 };
 export default Oscillator;

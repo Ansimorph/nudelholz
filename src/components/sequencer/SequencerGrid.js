@@ -7,8 +7,7 @@ const Button = styled("button")`
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  margin-right: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 
   &:focus {
     outline: none;
@@ -29,15 +28,25 @@ const Button = styled("button")`
 `;
 
 const Table = styled("table")`
-  border-spacing: 0;
+  display: flex;
+  width: 100%;
+`;
+
+const TableRow = styled("tr")`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const TableBody = styled("tbody")`
+  width: 100%;
 `;
 
 const SequencerGrid = ({ grid, clickHandler }) => {
   return (
     <Table>
-      <tbody>
+      <TableBody>
         {grid.map((row, rowIndex) => (
-          <tr key={rowIndex}>
+          <TableRow key={rowIndex}>
             {row.map((cell, columnIndex) => (
               <td key={rowIndex + columnIndex}>
                 <Button
@@ -49,9 +58,9 @@ const SequencerGrid = ({ grid, clickHandler }) => {
                 ></Button>
               </td>
             ))}
-          </tr>
+          </TableRow>
         ))}
-      </tbody>
+      </TableBody>
     </Table>
   );
 };

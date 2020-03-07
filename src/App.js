@@ -19,6 +19,7 @@ css`
     --focus-box-shadow: 0 0 0 4px #6bd5ff;
     --font: "pirata", sans-serif;
     --stroke-width: 8;
+    --grid-gap: 12px;
   }
 
   html {
@@ -31,18 +32,39 @@ css`
 `;
 
 const MainElement = styled("main")`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  padding: 20px;
-  max-width: 600px;
+  display: grid;
+  grid-gap: var(--grid-gap);
+  padding: 15px;
   background-color: var(--red);
   border-radius: 10px;
+
+  grid-template-columns: repeat(4, 90px);
+  grid-template-rows: repeat(8, max-content);
+  grid-template-areas:
+    "logo    logo    logo  logo"
+    "osc1    osc1    noise lfo"
+    "osc1    osc1    noise lfo"
+    "env     env     env   lfo"
+    "filter  filter  fx    fx"
+    "seq     seq     seq   seq"
+    "seq     seq     seq   seq"
+    "seq     seq     seq   seq";
+
+  @media (min-width: 920px) {
+    padding: 30px;
+    grid-template-columns: repeat(4, 90px) 40px repeat(4, 90px);
+    grid-template-rows: repeat(4, max-content);
+    grid-template-areas:
+      "logo    logo    logo  logo  space  filter  filter  fx    fx"
+      "osc1    osc1    noise lfo   space  seq     seq     seq   seq"
+      "osc1    osc1    noise lfo   space  seq     seq     seq   seq"
+      "env     env     env   lfo   space  seq     seq     seq   seq";
+  }
 `;
 
 const Title = styled("h1")`
-  text-align: center;
+  grid-area: logo;
+  text-align: left;
   font-family: var(--font);
   font-size: 100px;
   color: var(--yellow);

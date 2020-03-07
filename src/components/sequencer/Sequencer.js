@@ -3,12 +3,17 @@ import update from "react-addons-update";
 import { Sequence, Transport } from "tone";
 import clamp from "../../util/clamp";
 import fillArrayWithAscendingNumbers from "../../util/fillArrayWithAscendingNumbers";
+import styled from "astroturf";
 
 import SequencerGrid from "./SequencerGrid";
 import SequencerMidiGrid from "./SequencerMidiGrid";
 import SequencerMidiButtons from "./SequencerMidiButtons";
 import SequencerMidiTransportControls from "./SequencerMidiTransportControls";
 import MidiContext from "../../midiContext";
+
+const StyledSequencer = styled("div")`
+  grid-area: seq;
+`;
 
 const Sequencer = ({ setFrequency, triggerEnvelope }) => {
   const STEP_COUNT = 8;
@@ -66,7 +71,7 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
   }, []);
 
   return (
-    <div>
+    <StyledSequencer>
       <SequencerGrid
         grid={sequence2Grid(sequence, currentStep)}
         clickHandler={handleGridClick}
@@ -87,7 +92,7 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
           <SequencerMidiTransportControls moveXOffset={moveXOffset} />
         </div>
       )}
-    </div>
+    </StyledSequencer>
   );
 };
 
