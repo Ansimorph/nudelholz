@@ -7,6 +7,7 @@ import MidiContext from "./midiContext";
 import Oscillator from "./components/synth/Oscillator";
 import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
+import Effects from "./components/synth/Effects";
 import Sequencer from "./components/sequencer/Sequencer";
 
 css`
@@ -82,6 +83,8 @@ const App = () => {
   const [oscillatorRef, setOscillatorRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
   const [filterRef, setFilterRef] = useState();
+  const [effectsInputRef, setEffectsInputRef] = useState();
+  const [effectsOutputRef, setEffectsOutputRef] = useState();
 
   const [trigger, setTrigger] = useState([]);
 
@@ -92,9 +95,16 @@ const App = () => {
     if (oscillatorRef && envelopeRef) {
       Tone.connect(oscillatorRef, envelopeRef);
       Tone.connect(envelopeRef, filterRef);
-      Tone.connect(filterRef, Tone.Master);
+      Tone.connect(filterRef, effectsInputRef);
+      Tone.connect(effectsOutputRef, Tone.Master);
     }
-  }, [oscillatorRef, envelopeRef, filterRef]);
+  }, [
+    oscillatorRef,
+    envelopeRef,
+    filterRef,
+    effectsInputRef,
+    effectsOutputRef
+  ]);
 
   return (
     <MidiContext.Provider value={midi}>
@@ -103,6 +113,10 @@ const App = () => {
         <Oscillator register={setOscillatorRef} frequency={frequency} />
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
+        <Effects
+          registerInput={setEffectsInputRef}
+          registerOutput={setEffectsOutputRef}
+        ></Effects>
         <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
       </MainElement>
     </MidiContext.Provider>
