@@ -52,11 +52,11 @@ const EnvelopeElement = ({ trigger, register }) => {
   }, [trigger]);
 
   useEffect(() => {
-    envelope.current.set("attack", attack * 2);
+    envelope.current.set("attack", attack * 2 + 0.01);
   }, [attack]);
 
   useEffect(() => {
-    envelope.current.set("decay", decay * 2);
+    envelope.current.set("decay", decay * 2 + 0.01);
   }, [decay]);
 
   useEffect(() => {
