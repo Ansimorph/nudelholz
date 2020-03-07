@@ -12,7 +12,6 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
   let input = useRef();
   let shaper = useRef();
   let crossFadeFold = useRef();
-  let crossFadeReverb = useRef();
   let reverbNode = useRef();
 
   const [fold, setFold] = useState(0.5);
@@ -23,9 +22,9 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
     input.current = new Gain();
 
     shaper.current = new WaveShaper(x => {
-      const alpha = 0.5;
-      return Math.sin(Math.sin(x + Math.PI / 2) * 8 * (alpha + 0.125));
-    }, 2048);
+      const alpha = 1;
+      return Math.sin(Math.pow(2, 3.2 * alpha) * Math.sin(x * (Math.PI / 2)));
+    });
 
     crossFadeFold.current = new CrossFade(0);
 
@@ -36,32 +35,27 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
     input.current.connect(crossFadeFold.current, 0, 0);
     shaper.current.connect(crossFadeFold.current, 0, 1);
 
+    // Setup Reverb
+    reverbNode.current = new Freeverb();
+
+    // Connect input -> reverb
+    crossFadeFold.current.connect(reverbNode.current);
+
     registerInput(input.current);
+    registerOutput(reverbNode.current);
+
     // eslint-disable-next-line
   }, []);
 
   //Setup Reverb
-  useEffect(() => {
-    reverbNode.current = new Freeverb();
-    crossFadeReverb.current = new CrossFade(0);
-
-    // Connect input -> reverb
-    crossFadeFold.current.fan(reverbNode.current);
-
-    // Connect input, reverb -> crossfader
-    crossFadeFold.current.connect(crossFadeReverb.current, 0, 0);
-    reverbNode.current.connect(crossFadeReverb.current, 0, 1);
-
-    registerOutput(crossFadeReverb.current);
-    // eslint-disable-next-line
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     crossFadeFold.current.fade.value = fold;
   }, [fold]);
 
   useEffect(() => {
-    crossFadeReverb.current.fade.value = reverb;
+    reverbNode.current.set("wet", reverb);
   }, [reverb]);
 
   return (
@@ -71,13 +65,13 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
           value={fold}
           onChange={setFold}
           label="Fold"
-          midiCC={12}
+          midiCC={14}
         ></Encoder>
         <Encoder
           value={reverb}
           onChange={setReverb}
           label="Room"
-          midiCC={12}
+          midiCC={15}
         ></Encoder>
       </Group>
     </StyledFilter>
