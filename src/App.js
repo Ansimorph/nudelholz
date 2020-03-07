@@ -6,6 +6,7 @@ import Tone from "tone";
 import MidiContext from "./midiContext";
 import Oscillator from "./components/synth/Oscillator";
 import Envelope from "./components/synth/Envelope";
+import Filter from "./components/synth/Filter";
 import Sequencer from "./components/sequencer/Sequencer";
 
 css`
@@ -80,6 +81,7 @@ const App = () => {
 
   const [oscillatorRef, setOscillatorRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
+  const [filterRef, setFilterRef] = useState();
 
   const [trigger, setTrigger] = useState([]);
 
@@ -89,9 +91,10 @@ const App = () => {
   useEffect(() => {
     if (oscillatorRef && envelopeRef) {
       Tone.connect(oscillatorRef, envelopeRef);
-      Tone.connect(envelopeRef, Tone.Master);
+      Tone.connect(envelopeRef, filterRef);
+      Tone.connect(filterRef, Tone.Master);
     }
-  }, [oscillatorRef, envelopeRef]);
+  }, [oscillatorRef, envelopeRef, filterRef]);
 
   return (
     <MidiContext.Provider value={midi}>
@@ -99,6 +102,7 @@ const App = () => {
         <Title>nudelholz</Title>
         <Oscillator register={setOscillatorRef} frequency={frequency} />
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
+        <Filter register={setFilterRef}></Filter>
         <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
       </MainElement>
     </MidiContext.Provider>

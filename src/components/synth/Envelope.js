@@ -8,7 +8,7 @@ const StyledEnvelope = styled("div")`
   grid-area: env;
 `;
 
-const Oscillator = ({ trigger, register }) => {
+const EnvelopeElement = ({ trigger, register }) => {
   let envelope = useRef();
   let gain = useRef();
   let linearSignal = useRef();
@@ -88,4 +88,4 @@ const Oscillator = ({ trigger, register }) => {
     </StyledEnvelope>
   );
 };
-export default Oscillator;
+export default EnvelopeElement;
