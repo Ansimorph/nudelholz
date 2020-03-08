@@ -6,6 +6,7 @@ import Tone from "tone";
 import MidiContext from "./midiContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
 import PulseOscillator from "./components/synth/PulseOscillator";
+import Noise from "./components/synth/Noise";
 import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
@@ -36,9 +37,9 @@ const MainElement = styled("main")`
     grid-template-rows: repeat(4, max-content);
     grid-template-areas:
       "logo    logo    logo  logo  space  filter  filter  fx    fx"
-      "osc1    osc2    noise lfo   space  seq     seq     seq   seq"
-      "osc1    osc2    noise lfo   space  seq     seq     seq   seq"
-      "env     env     env   lfo   space  seq     seq     seq   seq";
+      "osc1    osc1    osc2  osc2  space  seq     seq     seq   seq"
+      "noise   lfo     lfo   lfo   space  seq     seq     seq   seq"
+      "env     env     env   null  space  seq     seq     seq   seq";
   }
 `;
 
@@ -59,6 +60,7 @@ const App = () => {
 
   const [oscillator1Ref, setOscillator1Ref] = useState();
   const [oscillator2Ref, setOscillator2Ref] = useState();
+  const [noiseRef, setNoiseRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
   const [filterRef, setFilterRef] = useState();
   const [effectsInputRef, setEffectsInputRef] = useState();
@@ -73,6 +75,7 @@ const App = () => {
     if (oscillator1Ref && envelopeRef) {
       Tone.connect(oscillator1Ref, envelopeRef);
       Tone.connect(oscillator2Ref, envelopeRef);
+      Tone.connect(noiseRef, envelopeRef);
       Tone.connect(envelopeRef, filterRef);
       Tone.connect(filterRef, effectsInputRef);
       Tone.connect(effectsOutputRef, Tone.Master);
@@ -83,7 +86,8 @@ const App = () => {
     effectsInputRef,
     effectsOutputRef,
     oscillator1Ref,
-    oscillator2Ref
+    oscillator2Ref,
+    noiseRef
   ]);
 
   return (
@@ -98,6 +102,7 @@ const App = () => {
           register={setOscillator2Ref}
           frequency={frequency}
         ></PulseOscillator>
+        <Noise register={setNoiseRef}></Noise>
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
         <Effects

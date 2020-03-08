@@ -44,7 +44,7 @@ const PulseOscillatorElement = ({ frequency, register }) => {
 
   return (
     <StyledOscillator>
-      <Group title="Pulse" direction="row">
+      <Group title="Pulse">
         <Encoder
           value={width}
           onChange={setWidth}

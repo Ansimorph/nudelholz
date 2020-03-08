@@ -44,7 +44,7 @@ const SawtoothOscillator = ({ frequency, register }) => {
 
   return (
     <StyledOscillator>
-      <Group title="Saw" direction="row">
+      <Group title="Saw">
         <Encoder
           value={spread}
           onChange={setSpread}
