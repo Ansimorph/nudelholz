@@ -20,7 +20,7 @@ const MainElement = styled("main")`
   background-color: var(--red);
   border-radius: 10px;
 
-  grid-template-columns: repeat(4, 90px);
+  grid-template-columns: repeat(4, max-content);
   grid-template-rows: repeat(8, max-content);
   grid-template-areas:
     "logo    logo    logo  logo"
@@ -33,14 +33,14 @@ const MainElement = styled("main")`
     "seq     seq     seq   seq";
 
   @media (min-width: 920px) {
-    padding: 30px 60px 30px 30px;
-    grid-template-columns: repeat(4, 90px) 40px repeat(4, 90px);
+    padding: 30px;
+    grid-template-columns: repeat(8, max-content);
     grid-template-rows: repeat(4, max-content);
     grid-template-areas:
-      "logo    logo    logo  logo  space  filter  filter  fx    fx"
-      "osc1    osc1    osc2  osc2  space  seq     seq     seq   seq"
-      "noise   lfo     lfo   lfo   space  seq     seq     seq   seq"
-      "env     env     env   null  space  seq     seq     seq   seq";
+      "logo    logo    logo  logo  bla     bla     bla   bla"
+      "osc1    osc1    osc2  osc2  noise   lfo     lfo   lfo"
+      "filter  filter  fx    fx    seq     seq     seq   seq"
+      "env     env     env   null  seq     seq     seq   seq";
   }
 `;
 
@@ -51,7 +51,7 @@ const Title = styled("h1")`
   color: var(--yellow);
   line-height: 0.8;
   font-weight: normal;
-  margin: 0 0 40px 0;
+  margin: 0 0 20px 0;
 `;
 
 const App = () => {
@@ -106,12 +106,12 @@ const App = () => {
         ></PulseOscillator>
         <Noise register={setNoiseRef}></Noise>
         <LFO register={setLfoRef}></LFO>
-        <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
         <Effects
           registerInput={setEffectsInputRef}
           registerOutput={setEffectsOutputRef}
         ></Effects>
+        <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
       </MainElement>
     </MidiContext.Provider>

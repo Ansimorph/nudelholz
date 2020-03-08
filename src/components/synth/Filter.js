@@ -31,7 +31,7 @@ const FilterElement = ({ register }) => {
 
   return (
     <StyledFilter>
-      <Group title="Low Pass Filter">
+      <Group title="Filter">
         <Encoder
           value={frequency}
           onChange={setFrequency}

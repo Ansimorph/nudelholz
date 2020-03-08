@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "astroturf";
 
-const StyledGroup = styled("div")``;
+const StyledGroup = styled("div")`
+  margin-right: calc(var(--grid-gap) * 2);
+  margin-bottom: calc(var(--grid-gap) / 2);
+`;
 
 const StyledEncoderGroup = styled("div")`
   display: grid;
   grid-gap: var(--grid-gap);
-  margin-bottom: var(--grid-gap);
 
   &.direction-column {
     grid-auto-flow: column;
