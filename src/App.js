@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMIDI } from "@react-midi/hooks";
-import styled, { css } from "astroturf";
+import styled from "astroturf";
 import Tone from "tone";
 
 import MidiContext from "./midiContext";
@@ -9,29 +9,6 @@ import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
 import Sequencer from "./components/sequencer/Sequencer";
-
-css`
-  :root {
-    --yellow: #f3ff6b;
-    --blue: #6bd5ff;
-    --red: #ff4444;
-    --white: #eee;
-    --inactive: #ff6d72;
-
-    --focus-box-shadow: 0 0 0 4px #6bd5ff;
-    --font: "pirata", sans-serif;
-    --stroke-width: 8;
-    --grid-gap: 12px;
-  }
-
-  html {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    background-color: #e4d4f9;
-  }
-`;
 
 const MainElement = styled("main")`
   display: grid;
@@ -67,7 +44,6 @@ const MainElement = styled("main")`
 const Title = styled("h1")`
   grid-area: logo;
   text-align: left;
-  font-family: var(--font);
   font-size: 100px;
   color: var(--yellow);
   line-height: 0.8;

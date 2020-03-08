@@ -12,7 +12,6 @@ const StyledEncoderGroup = styled("div")`
 const GroupHeading = styled("h2")`
   padding-left: 4px;
   margin: 0 0 8px 0;
-  font-family: var(--font);
   font-size: 28px;
   font-weight: normal;
   color: var(--yellow);

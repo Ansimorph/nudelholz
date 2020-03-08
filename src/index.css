@@ -1,4 +1,5 @@
 body {
+  font-family: "pirata", sans-serif;
   margin: 0;
 }
 
@@ -7,6 +8,28 @@ body {
   src: url("/PirataOne.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+}
+
+:root {
+  --yellow: #f3ff6b;
+  --green: #6bff83;
+  --blue: #6bd5ff;
+  --red: #ff4444;
+  --white: #eee;
+  --inactive: #ff6d72;
+
+  --focus-box-shadow: 0 0 0 4px #6bd5ff;
+  --font: "pirata", sans-serif;
+  --stroke-width: 8;
+  --grid-gap: 12px;
+}
+
+html {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #e4d4f9;
 }
 
 .sr-only:not(:focus):not(:active) {

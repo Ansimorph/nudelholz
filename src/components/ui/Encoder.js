@@ -24,7 +24,6 @@ const StyledCircularTrack = styled(CircularTrack)`
 
 const Label = styled("text")`
   fill: var(--yellow);
-  font-family: var(--font);
   font-size: 24px;
   font-weight: normal;
 `;
