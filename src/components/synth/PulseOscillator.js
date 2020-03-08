@@ -1,23 +1,23 @@
 import React, { useRef, useEffect, useState } from "react";
-import { FatOscillator, Gain } from "tone";
+import { PulseOscillator, Gain } from "tone";
 import styled from "astroturf";
 
 import Encoder from "../ui/Encoder";
 import Group from "../ui/Group";
 
 const StyledOscillator = styled("div")`
-  grid-area: osc1;
+  grid-area: osc2;
 `;
 
-const SawtoothOscillator = ({ frequency, register }) => {
+const PulseOscillatorElement = ({ frequency, register }) => {
   let oscillator = useRef();
   let gainNode = useRef();
 
-  const [spread, setSpread] = useState(0);
+  const [width, setWidth] = useState(0.25);
   const [gain, setGain] = useState(1);
 
   useEffect(() => {
-    oscillator.current = new FatOscillator("C#4", "sawtooth");
+    oscillator.current = new PulseOscillator();
     oscillator.current.start();
 
     gainNode.current = new Gain({
@@ -39,16 +39,16 @@ const SawtoothOscillator = ({ frequency, register }) => {
   }, [gain]);
 
   useEffect(() => {
-    oscillator.current.set("spread", spread * 20);
-  }, [spread]);
+    oscillator.current.set("width", width);
+  }, [width]);
 
   return (
     <StyledOscillator>
-      <Group title="Saw" direction="row">
+      <Group title="Pulse" direction="row">
         <Encoder
-          value={spread}
-          onChange={setSpread}
-          label="Spread"
+          value={width}
+          onChange={setWidth}
+          label="Width"
           midiCC={8}
         ></Encoder>
         <Encoder
@@ -61,4 +61,4 @@ const SawtoothOscillator = ({ frequency, register }) => {
     </StyledOscillator>
   );
 };
-export default SawtoothOscillator;
+export default PulseOscillatorElement;

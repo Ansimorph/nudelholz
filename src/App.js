@@ -5,6 +5,7 @@ import Tone from "tone";
 
 import MidiContext from "./midiContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
+import PulseOscillator from "./components/synth/PulseOscillator";
 import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
@@ -56,7 +57,8 @@ const App = () => {
 
   const [frequency, setFrequency] = useState({ frequency: 0, time: 0 });
 
-  const [oscillatorRef, setOscillatorRef] = useState();
+  const [oscillator1Ref, setOscillator1Ref] = useState();
+  const [oscillator2Ref, setOscillator2Ref] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
   const [filterRef, setFilterRef] = useState();
   const [effectsInputRef, setEffectsInputRef] = useState();
@@ -68,25 +70,34 @@ const App = () => {
 
   // Setup Wiring between audio nodes
   useEffect(() => {
-    if (oscillatorRef && envelopeRef) {
-      Tone.connect(oscillatorRef, envelopeRef);
+    if (oscillator1Ref && envelopeRef) {
+      Tone.connect(oscillator1Ref, envelopeRef);
+      Tone.connect(oscillator2Ref, envelopeRef);
       Tone.connect(envelopeRef, filterRef);
       Tone.connect(filterRef, effectsInputRef);
       Tone.connect(effectsOutputRef, Tone.Master);
     }
   }, [
-    oscillatorRef,
     envelopeRef,
     filterRef,
     effectsInputRef,
-    effectsOutputRef
+    effectsOutputRef,
+    oscillator1Ref,
+    oscillator2Ref
   ]);
 
   return (
     <MidiContext.Provider value={midi}>
       <MainElement>
         <Title>nudelholz</Title>
-        <SawtoothOscillator register={setOscillatorRef} frequency={frequency} />
+        <SawtoothOscillator
+          register={setOscillator1Ref}
+          frequency={frequency}
+        />
+        <PulseOscillator
+          register={setOscillator2Ref}
+          frequency={frequency}
+        ></PulseOscillator>
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
         <Effects
