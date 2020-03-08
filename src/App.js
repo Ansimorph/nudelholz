@@ -4,7 +4,7 @@ import styled from "astroturf";
 import Tone from "tone";
 
 import MidiContext from "./midiContext";
-import Oscillator from "./components/synth/Oscillator";
+import SawtoothOscillator from "./components/synth/SawtoothOscillator";
 import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
@@ -21,8 +21,8 @@ const MainElement = styled("main")`
   grid-template-rows: repeat(8, max-content);
   grid-template-areas:
     "logo    logo    logo  logo"
-    "osc1    osc1    noise lfo"
-    "osc1    osc1    noise lfo"
+    "osc1    osc2    noise lfo"
+    "osc1    osc2    noise lfo"
     "env     env     env   lfo"
     "filter  filter  fx    fx"
     "seq     seq     seq   seq"
@@ -35,8 +35,8 @@ const MainElement = styled("main")`
     grid-template-rows: repeat(4, max-content);
     grid-template-areas:
       "logo    logo    logo  logo  space  filter  filter  fx    fx"
-      "osc1    osc1    noise lfo   space  seq     seq     seq   seq"
-      "osc1    osc1    noise lfo   space  seq     seq     seq   seq"
+      "osc1    osc2    noise lfo   space  seq     seq     seq   seq"
+      "osc1    osc2    noise lfo   space  seq     seq     seq   seq"
       "env     env     env   lfo   space  seq     seq     seq   seq";
   }
 `;
@@ -86,7 +86,7 @@ const App = () => {
     <MidiContext.Provider value={midi}>
       <MainElement>
         <Title>nudelholz</Title>
-        <Oscillator register={setOscillatorRef} frequency={frequency} />
+        <SawtoothOscillator register={setOscillatorRef} frequency={frequency} />
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
         <Effects

@@ -4,9 +4,16 @@ import styled from "astroturf";
 const StyledGroup = styled("div")``;
 
 const StyledEncoderGroup = styled("div")`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-gap: var(--grid-gap);
+
+  &.direction-column {
+    grid-auto-flow: column;
+  }
+
+  &.direction-row {
+    grid-auto-flow: row;
+  }
 `;
 
 const GroupHeading = styled("h2")`
@@ -17,11 +24,11 @@ const GroupHeading = styled("h2")`
   color: var(--yellow);
 `;
 
-const Group = ({ title, children }) => {
+const Group = ({ title, children, direction = "column" }) => {
   return (
     <StyledGroup>
       <GroupHeading>{title}</GroupHeading>
-      <StyledEncoderGroup>{children}</StyledEncoderGroup>
+      <StyledEncoderGroup direction={direction}>{children}</StyledEncoderGroup>
     </StyledGroup>
   );
 };
