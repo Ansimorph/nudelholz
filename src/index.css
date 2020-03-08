@@ -14,7 +14,7 @@ body {
   --yellow: #f3ff6b;
   --green: #6bff83;
   --blue: #6bd5ff;
-  --red: #ff4444;
+  --red: #ff3333;
   --white: #eee;
   --inactive: #ff6d72;
 
@@ -22,6 +22,7 @@ body {
   --font: "pirata", sans-serif;
   --stroke-width: 8;
   --grid-gap: 12px;
+  --button-size: 40px;
 }
 
 html {

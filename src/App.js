@@ -7,6 +7,7 @@ import MidiContext from "./midiContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
 import PulseOscillator from "./components/synth/PulseOscillator";
 import Noise from "./components/synth/Noise";
+import LFO from "./components/synth/Lfo";
 import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
@@ -15,7 +16,7 @@ import Sequencer from "./components/sequencer/Sequencer";
 const MainElement = styled("main")`
   display: grid;
   grid-gap: var(--grid-gap);
-  padding: 15px;
+  padding: 15px 30px 15px 15px;
   background-color: var(--red);
   border-radius: 10px;
 
@@ -32,7 +33,7 @@ const MainElement = styled("main")`
     "seq     seq     seq   seq";
 
   @media (min-width: 920px) {
-    padding: 30px;
+    padding: 30px 60px 30px 30px;
     grid-template-columns: repeat(4, 90px) 40px repeat(4, 90px);
     grid-template-rows: repeat(4, max-content);
     grid-template-areas:
@@ -61,6 +62,7 @@ const App = () => {
   const [oscillator1Ref, setOscillator1Ref] = useState();
   const [oscillator2Ref, setOscillator2Ref] = useState();
   const [noiseRef, setNoiseRef] = useState();
+  const [lfoRef, setLfoRef] = useState();
   const [envelopeRef, setEnvelopeRef] = useState();
   const [filterRef, setFilterRef] = useState();
   const [effectsInputRef, setEffectsInputRef] = useState();
@@ -103,6 +105,7 @@ const App = () => {
           frequency={frequency}
         ></PulseOscillator>
         <Noise register={setNoiseRef}></Noise>
+        <LFO register={setLfoRef}></LFO>
         <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
         <Filter register={setFilterRef}></Filter>
         <Effects

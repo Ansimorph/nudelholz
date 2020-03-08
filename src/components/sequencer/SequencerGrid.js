@@ -2,8 +2,8 @@ import React from "react";
 import styled from "astroturf";
 
 const Button = styled("button")`
-  width: 40px;
-  height: 40px;
+  width: var(--button-size);
+  height: var(--button-size);
   border-radius: 50%;
   border: none;
   cursor: pointer;
