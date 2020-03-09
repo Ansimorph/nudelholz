@@ -21,9 +21,7 @@ const SawtoothOscillator = ({ frequency, register }) => {
     oscillator.current = new FatOscillator("C#4", "sawtooth");
     oscillator.current.start();
 
-    gainNode.current = new Gain({
-      gain: 0
-    });
+    gainNode.current = new Gain();
 
     oscillator.current.connect(gainNode.current);
 

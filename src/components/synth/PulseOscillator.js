@@ -22,9 +22,7 @@ const PulseOscillatorElement = ({ frequency, register }) => {
     oscillator.current = new PulseOscillator();
     oscillator.current.start();
 
-    gainNode.current = new Gain({
-      gain: 0
-    });
+    gainNode.current = new Gain();
 
     oscillator.current.connect(gainNode.current);
 

@@ -101,6 +101,7 @@ const Encoder = ({
   });
   const [lfoActive, setLfoActive] = useState(false);
 
+  // Listen to MIDI
   useEffect(() => {
     if (midiInput) {
       onChange(midiControl.value / 127);
@@ -108,6 +109,7 @@ const Encoder = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [midiControl.value, midiInput]);
 
+  // Setup Signal Routing
   useEffect(() => {
     id.current = uniqueId("label_");
     if (registerSignal) {
@@ -121,6 +123,7 @@ const Encoder = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Setup unique ID to connect label and input
   useEffect(() => {
     id.current = uniqueId("label_");
     if (lfoRef) {

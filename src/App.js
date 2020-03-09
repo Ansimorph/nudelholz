@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useMIDI } from "@react-midi/hooks";
-import styled from "astroturf";
 import Tone from "tone";
 
+import Layout from "./components/ui/Layout";
+import Title from "./components/ui/Title";
 import MidiContext from "./midiContext";
 import ModulationContext from "./modulationContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
@@ -13,47 +14,6 @@ import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
 import Sequencer from "./components/sequencer/Sequencer";
-
-const MainElement = styled("main")`
-  display: grid;
-  grid-gap: var(--grid-gap);
-  padding: 15px 30px 15px 15px;
-  background-color: var(--red);
-  border-radius: 10px;
-
-  grid-template-columns: repeat(4, max-content);
-  grid-template-rows: repeat(8, max-content);
-  grid-template-areas:
-    "logo    logo    logo  logo"
-    "osc1    osc2    noise lfo"
-    "osc1    osc2    noise lfo"
-    "env     env     env   lfo"
-    "filter  filter  fx    fx"
-    "seq     seq     seq   seq"
-    "seq     seq     seq   seq"
-    "seq     seq     seq   seq";
-
-  @media (min-width: 920px) {
-    padding: 30px;
-    grid-template-columns: repeat(8, max-content);
-    grid-template-rows: repeat(4, max-content);
-    grid-template-areas:
-      "logo    logo    logo  logo  bla     bla     bla   bla"
-      "osc1    osc1    osc2  osc2  noise   lfo     lfo   lfo"
-      "filter  filter  fx    fx    seq     seq     seq   seq"
-      "env     env     env   null  seq     seq     seq   seq";
-  }
-`;
-
-const Title = styled("h1")`
-  grid-area: logo;
-  text-align: left;
-  font-size: 100px;
-  color: var(--yellow);
-  line-height: 0.8;
-  font-weight: normal;
-  margin: 0 0 20px 0;
-`;
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
@@ -97,8 +57,8 @@ const App = () => {
   return (
     <MidiContext.Provider value={midi}>
       <ModulationContext.Provider value={modulation}>
-        <MainElement>
-          <Title>nudelholz</Title>
+        <Layout>
+          <Title></Title>
           <SawtoothOscillator
             register={setOscillator1Ref}
             frequency={frequency}
@@ -116,7 +76,7 @@ const App = () => {
           ></Effects>
           <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
           <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
-        </MainElement>
+        </Layout>
       </ModulationContext.Provider>
     </MidiContext.Provider>
   );
