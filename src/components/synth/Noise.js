@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { Noise, Gain } from "tone";
 import styled from "astroturf";
 
-import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledOscillator = styled("div")`
@@ -10,10 +10,9 @@ const StyledOscillator = styled("div")`
 `;
 
 const NoiseElement = ({ register }) => {
-  let noise = useRef();
-  let gainNode = useRef();
-
-  const [gain, setGain] = useState(0);
+  const noise = useRef();
+  const gainNode = useRef();
+  let controlSignal = useRef();
 
   useEffect(() => {
     noise.current = new Noise("pink");
@@ -30,18 +29,22 @@ const NoiseElement = ({ register }) => {
   }, []);
 
   useEffect(() => {
-    gainNode.current.gain.value = gain / 2;
-  }, [gain]);
+    controlSignal.connect(gainNode.current.gain);
+  }, [controlSignal]);
+
+  const handleControlSignal = signalRef => {
+    controlSignal = signalRef;
+  };
 
   return (
     <StyledOscillator>
       <Group title="Noise">
-        <Encoder
-          value={gain}
-          onChange={setGain}
+        <SignalEncoder
           label="Gain"
+          defaultValue={0}
+          registerSignal={handleControlSignal}
           midiCC={9}
-        ></Encoder>
+        ></SignalEncoder>
       </Group>
     </StyledOscillator>
   );
