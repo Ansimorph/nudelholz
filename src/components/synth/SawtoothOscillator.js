@@ -10,8 +10,9 @@ const StyledOscillator = styled("div")`
 `;
 
 const SawtoothOscillator = ({ frequency, register }) => {
-  let oscillator = useRef();
-  let gainNode = useRef();
+  const oscillator = useRef();
+  const gainNode = useRef();
+  let controlSignal = useRef();
 
   const [spread, setSpread] = useState(0);
   const [gain, setGain] = useState(1);
@@ -35,12 +36,16 @@ const SawtoothOscillator = ({ frequency, register }) => {
   }, [frequency]);
 
   useEffect(() => {
-    gainNode.current.gain.value = gain / 2;
-  }, [gain]);
-
-  useEffect(() => {
     oscillator.current.set("spread", spread * 20);
   }, [spread]);
+
+  useEffect(() => {
+    controlSignal.connect(gainNode.current.gain);
+  }, [controlSignal]);
+
+  const handleControlSignal = signalRef => {
+    controlSignal = signalRef;
+  };
 
   return (
     <StyledOscillator>
@@ -56,6 +61,8 @@ const SawtoothOscillator = ({ frequency, register }) => {
           onChange={setGain}
           label="Gain"
           midiCC={9}
+          modulate={true}
+          registerSignal={handleControlSignal}
         ></Encoder>
       </Group>
     </StyledOscillator>

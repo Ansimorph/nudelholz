@@ -10,8 +10,10 @@ const StyledOscillator = styled("div")`
 `;
 
 const PulseOscillatorElement = ({ frequency, register }) => {
-  let oscillator = useRef();
-  let gainNode = useRef();
+  const oscillator = useRef();
+  const gainNode = useRef();
+  let gainControlSignal = useRef();
+  let widthControlSignal = useRef();
 
   const [width, setWidth] = useState(0.25);
   const [gain, setGain] = useState(1);
@@ -35,12 +37,20 @@ const PulseOscillatorElement = ({ frequency, register }) => {
   }, [frequency]);
 
   useEffect(() => {
-    gainNode.current.gain.value = gain / 2;
-  }, [gain]);
+    gainControlSignal.connect(gainNode.current.gain);
+  }, [gainControlSignal]);
 
   useEffect(() => {
-    oscillator.current.set("width", width);
-  }, [width]);
+    widthControlSignal.connect(oscillator.current.width);
+  }, [widthControlSignal]);
+
+  const handleGainControlSignal = signalRef => {
+    gainControlSignal = signalRef;
+  };
+
+  const handleWidthControlSignal = signalRef => {
+    widthControlSignal = signalRef;
+  };
 
   return (
     <StyledOscillator>
@@ -50,12 +60,16 @@ const PulseOscillatorElement = ({ frequency, register }) => {
           onChange={setWidth}
           label="Width"
           midiCC={8}
+          modulate={true}
+          registerSignal={handleWidthControlSignal}
         ></Encoder>
         <Encoder
           value={gain}
           onChange={setGain}
           label="Gain"
           midiCC={9}
+          modulate={true}
+          registerSignal={handleGainControlSignal}
         ></Encoder>
       </Group>
     </StyledOscillator>

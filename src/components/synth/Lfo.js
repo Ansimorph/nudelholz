@@ -13,11 +13,11 @@ const LFOElement = ({ register }) => {
   let LfoNode = useRef();
   let gainNode = useRef();
 
-  const [frequency, setFrequency] = useState(0.25);
+  const [frequency, setFrequency] = useState("4n");
   const [gain, setGain] = useState(1);
 
   useEffect(() => {
-    LfoNode.current = new LFO();
+    LfoNode.current = new LFO("4n", 0, 1);
     LfoNode.current.start();
 
     gainNode.current = new Gain({
@@ -30,9 +30,9 @@ const LFOElement = ({ register }) => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    LfoNode.current.set("frequency", frequency * 10 + 0.1);
-  }, [frequency]);
+  // useEffect(() => {
+  //   LfoNode.current.set("frequency", frequency);
+  // }, [frequency]);
 
   useEffect(() => {
     gainNode.current.gain.value = gain / 2;
@@ -41,18 +41,8 @@ const LFOElement = ({ register }) => {
   return (
     <StyledOscillator>
       <Group title="LFO">
-        <Encoder
-          value="0"
-          onChange={setFrequency}
-          label="Shape"
-          midiCC={8}
-        ></Encoder>
-        <Encoder
-          value={frequency}
-          onChange={setFrequency}
-          label="Rate"
-          midiCC={8}
-        ></Encoder>
+        <Encoder value="" onChange="" label="Shape" midiCC={8}></Encoder>
+        <Encoder value="" onChange="" label="Rate" midiCC={8}></Encoder>
         <Encoder
           value={gain}
           onChange={setGain}

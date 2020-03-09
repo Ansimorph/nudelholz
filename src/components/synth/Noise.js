@@ -13,7 +13,7 @@ const NoiseElement = ({ register }) => {
   let noise = useRef();
   let gainNode = useRef();
 
-  const [gain, setGain] = useState(1);
+  const [gain, setGain] = useState(0);
 
   useEffect(() => {
     noise.current = new Noise("pink");

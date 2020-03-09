@@ -4,6 +4,7 @@ import styled from "astroturf";
 import Tone from "tone";
 
 import MidiContext from "./midiContext";
+import ModulationContext from "./modulationContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
 import PulseOscillator from "./components/synth/PulseOscillator";
 import Noise from "./components/synth/Noise";
@@ -71,6 +72,7 @@ const App = () => {
   const [trigger, setTrigger] = useState([]);
 
   const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
+  const modulation = { lfoRef: lfoRef };
 
   // Setup Wiring between audio nodes
   useEffect(() => {
@@ -94,26 +96,28 @@ const App = () => {
 
   return (
     <MidiContext.Provider value={midi}>
-      <MainElement>
-        <Title>nudelholz</Title>
-        <SawtoothOscillator
-          register={setOscillator1Ref}
-          frequency={frequency}
-        />
-        <PulseOscillator
-          register={setOscillator2Ref}
-          frequency={frequency}
-        ></PulseOscillator>
-        <Noise register={setNoiseRef}></Noise>
-        <LFO register={setLfoRef}></LFO>
-        <Filter register={setFilterRef}></Filter>
-        <Effects
-          registerInput={setEffectsInputRef}
-          registerOutput={setEffectsOutputRef}
-        ></Effects>
-        <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
-        <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
-      </MainElement>
+      <ModulationContext.Provider value={modulation}>
+        <MainElement>
+          <Title>nudelholz</Title>
+          <SawtoothOscillator
+            register={setOscillator1Ref}
+            frequency={frequency}
+          />
+          <PulseOscillator
+            register={setOscillator2Ref}
+            frequency={frequency}
+          ></PulseOscillator>
+          <Noise register={setNoiseRef}></Noise>
+          <LFO register={setLfoRef}></LFO>
+          <Filter register={setFilterRef}></Filter>
+          <Effects
+            registerInput={setEffectsInputRef}
+            registerOutput={setEffectsOutputRef}
+          ></Effects>
+          <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
+          <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
+        </MainElement>
+      </ModulationContext.Provider>
     </MidiContext.Provider>
   );
 };

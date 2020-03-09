@@ -7,7 +7,9 @@ import {
 } from "react-circular-input";
 import { uniqueId } from "lodash";
 import MidiContext, { MIDI_CHANNEL } from "../../midiContext";
+import ModulationContext from "../../modulationContext";
 import { useMIDIControl } from "@react-midi/hooks";
+import { Signal, Add } from "tone";
 
 const StyledCircularInput = styled(CircularInput)``;
 
@@ -80,9 +82,19 @@ const LfoButton = styled("button")`
   }
 `;
 
-const Encoder = ({ value, onChange, label, midiCC }) => {
+const Encoder = ({
+  value,
+  onChange,
+  label,
+  midiCC,
+  modulate,
+  registerSignal
+}) => {
   const id = useRef();
+  const signalRef = useRef();
+  const signalAdder = useRef();
   const { midiInput } = useContext(MidiContext);
+  const { lfoRef } = useContext(ModulationContext);
   const midiControl = useMIDIControl(midiInput, {
     control: midiCC,
     channel: MIDI_CHANNEL
@@ -98,7 +110,40 @@ const Encoder = ({ value, onChange, label, midiCC }) => {
 
   useEffect(() => {
     id.current = uniqueId("label_");
+    if (registerSignal) {
+      signalAdder.current = new Add();
+      signalRef.current = new Signal(value);
+
+      signalRef.current.connect(signalAdder.current, 0, 0);
+
+      registerSignal(signalAdder.current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    id.current = uniqueId("label_");
+    if (lfoRef) {
+    }
+  }, [lfoRef]);
+
+  // Provide current value as a signal
+  useEffect(() => {
+    if (signalRef.current) {
+      signalRef.current.value = value;
+    }
+  }, [value]);
+
+  // Set up modulation of signal
+  useEffect(() => {
+    if (signalRef.current && lfoRef) {
+      if (lfoActive) {
+        lfoRef.connect(signalAdder.current, 0, 1);
+      } else {
+        lfoRef.disconnect(signalAdder.current);
+      }
+    }
+  }, [lfoActive, lfoRef, signalRef, signalAdder]);
 
   const toggleLfo = () => {
     setLfoActive(state => !state);
@@ -130,11 +175,13 @@ const Encoder = ({ value, onChange, label, midiCC }) => {
           </Label>
         </StyledCircularInput>
       </CircularWrapper>
-      <LfoButton active={lfoActive.toString()} onClick={() => toggleLfo()}>
-        <span>L</span>
-        <span>F</span>
-        <span>O</span>
-      </LfoButton>
+      {modulate && (
+        <LfoButton active={lfoActive.toString()} onClick={() => toggleLfo()}>
+          <span>L</span>
+          <span>F</span>
+          <span>O</span>
+        </LfoButton>
+      )}
     </ControlElement>
   );
 };
