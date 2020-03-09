@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { PulseOscillator, Gain } from "tone";
 import styled from "astroturf";
 
-import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledOscillator = styled("div")`
@@ -14,9 +14,6 @@ const PulseOscillatorElement = ({ frequency, register }) => {
   const gainNode = useRef();
   let gainControlSignal = useRef();
   let widthControlSignal = useRef();
-
-  const [width, setWidth] = useState(0.25);
-  const [gain, setGain] = useState(1);
 
   useEffect(() => {
     oscillator.current = new PulseOscillator();
@@ -53,22 +50,18 @@ const PulseOscillatorElement = ({ frequency, register }) => {
   return (
     <StyledOscillator>
       <Group title="Pulse">
-        <Encoder
-          value={width}
-          onChange={setWidth}
+        <SignalEncoder
           label="Width"
           midiCC={8}
-          modulate={true}
           registerSignal={handleWidthControlSignal}
-        ></Encoder>
-        <Encoder
-          value={gain}
-          onChange={setGain}
+          defaultValue={0.25}
+        ></SignalEncoder>
+        <SignalEncoder
           label="Gain"
           midiCC={9}
-          modulate={true}
           registerSignal={handleGainControlSignal}
-        ></Encoder>
+          defaultValue={1}
+        ></SignalEncoder>
       </Group>
     </StyledOscillator>
   );

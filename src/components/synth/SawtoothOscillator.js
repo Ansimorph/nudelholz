@@ -3,6 +3,7 @@ import { FatOscillator, Gain } from "tone";
 import styled from "astroturf";
 
 import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledOscillator = styled("div")`
@@ -15,7 +16,6 @@ const SawtoothOscillator = ({ frequency, register }) => {
   let controlSignal = useRef();
 
   const [spread, setSpread] = useState(0);
-  const [gain, setGain] = useState(1);
 
   useEffect(() => {
     oscillator.current = new FatOscillator("C#4", "sawtooth");
@@ -54,14 +54,12 @@ const SawtoothOscillator = ({ frequency, register }) => {
           label="Spread"
           midiCC={8}
         ></Encoder>
-        <Encoder
-          value={gain}
-          onChange={setGain}
+        <SignalEncoder
           label="Gain"
+          defaultValue={1}
           midiCC={9}
-          modulate={true}
           registerSignal={handleControlSignal}
-        ></Encoder>
+        ></SignalEncoder>
       </Group>
     </StyledOscillator>
   );

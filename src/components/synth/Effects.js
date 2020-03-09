@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { WaveShaper, CrossFade, Gain, Freeverb } from "tone";
 import styled from "astroturf";
-import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledFilter = styled("div")`
@@ -13,9 +13,8 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
   let shaper = useRef();
   let crossFadeFold = useRef();
   let reverbNode = useRef();
-
-  const [fold, setFold] = useState(0.5);
-  const [reverb, setReverb] = useState(0.5);
+  let foldControlSignal = useRef();
+  let reverbControlSignal = useRef();
 
   // Setup WaveFolder
   useEffect(() => {
@@ -47,32 +46,37 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
     // eslint-disable-next-line
   }, []);
 
-  //Setup Reverb
-  useEffect(() => {}, []);
+  useEffect(() => {
+    reverbControlSignal.connect(reverbNode.current.wet);
+  }, [reverbControlSignal]);
 
   useEffect(() => {
-    crossFadeFold.current.fade.value = fold;
-  }, [fold]);
+    foldControlSignal.connect(crossFadeFold.current.fade);
+  }, [foldControlSignal]);
 
-  useEffect(() => {
-    reverbNode.current.set("wet", reverb);
-  }, [reverb]);
+  const handleReverbControlSignal = signalRef => {
+    reverbControlSignal = signalRef;
+  };
+
+  const handleFoldControlSignal = signalRef => {
+    foldControlSignal = signalRef;
+  };
 
   return (
     <StyledFilter>
       <Group title="Effects">
-        <Encoder
-          value={fold}
-          onChange={setFold}
+        <SignalEncoder
           label="Fold"
           midiCC={14}
-        ></Encoder>
-        <Encoder
-          value={reverb}
-          onChange={setReverb}
+          defaultValue={0}
+          registerSignal={handleFoldControlSignal}
+        ></SignalEncoder>
+        <SignalEncoder
           label="Room"
           midiCC={15}
-        ></Encoder>
+          defaultValue={0}
+          registerSignal={handleReverbControlSignal}
+        ></SignalEncoder>
       </Group>
     </StyledFilter>
   );
