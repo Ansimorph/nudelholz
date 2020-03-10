@@ -17,7 +17,7 @@ const LFOElement = ({ register }) => {
   let gainControlSignal = useRef();
 
   useEffect(() => {
-    LfoNode.current = new LFO("4n", 0, 1);
+    LfoNode.current = new LFO("4n", -0.5, 0.5);
     LfoNode.current.start();
 
     gainNode.current = new Gain({
@@ -69,13 +69,13 @@ const LFOElement = ({ register }) => {
         <SignalEncoder
           label="Rate"
           midiCC={8}
-          defaultValue={1}
+          defaultValue={0.1}
           registerSignal={handleFrequencyControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Gain"
           midiCC={9}
-          defaultValue={1}
+          defaultValue={0.1}
           registerSignal={handleGainControlSignal}
         ></SignalEncoder>
       </Group>

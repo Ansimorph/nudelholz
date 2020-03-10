@@ -12,6 +12,7 @@ import { useMIDIControl } from "@react-midi/hooks";
 const StyledCircularInput = styled(CircularInput)``;
 
 const CircularWrapper = styled("div")`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,7 +88,8 @@ const Encoder = ({
   onLfoChange,
   label,
   midiCC,
-  modulate
+  modulate,
+  children
 }) => {
   const id = useRef();
   const { midiInput } = useContext(MidiContext);
@@ -134,6 +136,7 @@ const Encoder = ({
             {label}
           </Label>
         </StyledCircularInput>
+        {children}
       </CircularWrapper>
       {modulate && (
         <LfoButton active={lfoActive.toString()} onClick={() => onLfoChange()}>
