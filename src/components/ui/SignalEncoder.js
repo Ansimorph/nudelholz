@@ -77,7 +77,7 @@ const SignalEncoder = ({ defaultValue = 0, registerSignal, midiCC, label }) => {
     if (signalMeter.current) {
       animationElement.current.style.setProperty(
         "--lfo",
-        signalMeter.current.getValue()
+        Math.abs(signalMeter.current.getValue())
       );
     }
   }, lfoActive);

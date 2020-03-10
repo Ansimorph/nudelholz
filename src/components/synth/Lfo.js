@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { LFO, Gain, Scale, Delay } from "tone";
+import { LFO, Gain, ScaleExp, Delay } from "tone";
 import styled from "astroturf";
 
 import Encoder from "../ui/Encoder";
@@ -41,7 +41,7 @@ const LFOElement = ({ register }) => {
   }, [gainControlSignal]);
 
   useEffect(() => {
-    const scale = new Scale(0, 10);
+    const scale = new ScaleExp(-2, 10, 2);
     const delay = new Delay(0.01);
 
     frequencyControlSignal.connect(scale);
