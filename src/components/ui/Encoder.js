@@ -76,7 +76,7 @@ const LfoButton = styled("button")`
 
   > span:nth-of-type(2) {
     vertical-align: 4px;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
   }
 `;
 
