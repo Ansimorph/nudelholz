@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
-import { LFO, Gain } from "tone";
+import React, { useRef, useEffect } from "react";
+import { LFO, Gain, Scale, Delay } from "tone";
 import styled from "astroturf";
 
 import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledOscillator = styled("div")`
@@ -10,11 +11,10 @@ const StyledOscillator = styled("div")`
 `;
 
 const LFOElement = ({ register }) => {
-  let LfoNode = useRef();
-  let gainNode = useRef();
-
-  const [frequency, setFrequency] = useState("4n");
-  const [gain, setGain] = useState(1);
+  const LfoNode = useRef();
+  const gainNode = useRef();
+  let frequencyControlSignal = useRef();
+  let gainControlSignal = useRef();
 
   useEffect(() => {
     LfoNode.current = new LFO("4n", 0, 1);
@@ -30,25 +30,54 @@ const LFOElement = ({ register }) => {
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   LfoNode.current.set("frequency", frequency);
-  // }, [frequency]);
+  useEffect(() => {
+    const delay = new Delay(0.01);
+    gainControlSignal.connect(delay);
+    delay.connect(gainNode.current.gain);
+
+    return function cleanup() {
+      delay.dispose();
+    };
+  }, [gainControlSignal]);
 
   useEffect(() => {
-    gainNode.current.gain.value = gain / 2;
-  }, [gain]);
+    const scale = new Scale(0, 10);
+    const delay = new Delay(0.01);
+
+    frequencyControlSignal.connect(scale);
+    scale.connect(delay);
+    delay.connect(LfoNode.current.frequency);
+
+    return function cleanup() {
+      scale.dispose();
+      delay.dispose();
+    };
+  }, [frequencyControlSignal]);
+
+  const handleFrequencyControlSignal = signalRef => {
+    frequencyControlSignal = signalRef;
+  };
+
+  const handleGainControlSignal = signalRef => {
+    gainControlSignal = signalRef;
+  };
 
   return (
     <StyledOscillator>
       <Group title="LFO">
         <Encoder value="" onChange="" label="Shape" midiCC={8}></Encoder>
-        <Encoder value="" onChange="" label="Rate" midiCC={8}></Encoder>
-        <Encoder
-          value={gain}
-          onChange={setGain}
+        <SignalEncoder
+          label="Rate"
+          midiCC={8}
+          defaultValue={1}
+          registerSignal={handleFrequencyControlSignal}
+        ></SignalEncoder>
+        <SignalEncoder
           label="Gain"
           midiCC={9}
-        ></Encoder>
+          defaultValue={1}
+          registerSignal={handleGainControlSignal}
+        ></SignalEncoder>
       </Group>
     </StyledOscillator>
   );
