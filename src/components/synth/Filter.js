@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Filter } from "tone";
+import React, { useRef, useEffect } from "react";
+import { Filter, Scale, ScaleExp } from "tone";
 import styled from "astroturf";
-import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledFilter = styled("div")`
@@ -9,10 +9,9 @@ const StyledFilter = styled("div")`
 `;
 
 const FilterElement = ({ register }) => {
-  let filter = useRef();
-
-  const [frequency, setFrequency] = useState(0.9);
-  const [resonance, setResonance] = useState(1);
+  const filter = useRef();
+  let frequencyControlSignal = useRef();
+  let resonanceControlSignal = useRef();
 
   useEffect(() => {
     filter.current = new Filter();
@@ -22,28 +21,52 @@ const FilterElement = ({ register }) => {
   }, []);
 
   useEffect(() => {
-    filter.current.set("frequency", Math.pow(frequency, 2) * 20000);
-  }, [frequency]);
+    const scale = new ScaleExp(0, 20000, 2);
+    frequencyControlSignal.connect(scale);
+    scale.connect(filter.current.frequency);
+
+    return function cleanup() {
+      scale.dispose();
+    };
+  }, [resonanceControlSignal]);
 
   useEffect(() => {
-    filter.current.set("Q", resonance * 10);
-  }, [resonance]);
+    const scale = new Scale(0, 10);
+    resonanceControlSignal.connect(scale);
+    scale.connect(filter.current.Q);
+
+    return function cleanup() {
+      scale.dispose();
+    };
+  }, [resonanceControlSignal]);
+
+  useEffect(() => {
+    frequencyControlSignal.connect(filter.current.frequency);
+  }, [frequencyControlSignal]);
+
+  const handleFrequencyControlSignal = signalRef => {
+    frequencyControlSignal = signalRef;
+  };
+
+  const handleResonanceControlSignal = signalRef => {
+    resonanceControlSignal = signalRef;
+  };
 
   return (
     <StyledFilter>
       <Group title="Filter">
-        <Encoder
-          value={frequency}
-          onChange={setFrequency}
+        <SignalEncoder
           label="Freq"
           midiCC={12}
-        ></Encoder>
-        <Encoder
-          value={resonance}
-          onChange={setResonance}
+          defaultValue={1}
+          registerSignal={handleFrequencyControlSignal}
+        ></SignalEncoder>
+        <SignalEncoder
           label="Res"
           midiCC={13}
-        ></Encoder>
+          defaultValue={0}
+          registerSignal={handleResonanceControlSignal}
+        ></SignalEncoder>
       </Group>
     </StyledFilter>
   );
