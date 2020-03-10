@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Envelope, Gain, Signal, CrossFade } from "tone";
 import styled from "astroturf";
 import Encoder from "../ui/Encoder";
+import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
 const StyledEnvelope = styled("div")`
@@ -9,14 +10,14 @@ const StyledEnvelope = styled("div")`
 `;
 
 const EnvelopeElement = ({ trigger, register }) => {
-  let envelope = useRef();
-  let gain = useRef();
-  let linearSignal = useRef();
-  let crossFade = useRef();
+  const envelope = useRef();
+  const gain = useRef();
+  const linearSignal = useRef();
+  const crossFade = useRef();
+  let gainControlSignal = useRef();
 
   const [attack, setAttack] = useState(0.25);
   const [decay, setDecay] = useState(0.25);
-  const [envelopeGain, setEnvelopeGain] = useState(0.5);
 
   useEffect(() => {
     envelope.current = new Envelope({
@@ -36,8 +37,8 @@ const EnvelopeElement = ({ trigger, register }) => {
 
     crossFade.current = new CrossFade(0);
 
-    envelope.current.connect(crossFade.current, 0, 0);
-    linearSignal.current.connect(crossFade.current, 0, 1);
+    envelope.current.connect(crossFade.current, 0, 1);
+    linearSignal.current.connect(crossFade.current, 0, 0);
 
     crossFade.current.connect(gain.current.gain);
 
@@ -60,8 +61,12 @@ const EnvelopeElement = ({ trigger, register }) => {
   }, [decay]);
 
   useEffect(() => {
-    crossFade.current.fade.value = 1 - envelopeGain;
-  }, [envelopeGain]);
+    gainControlSignal.connect(crossFade.current.fade);
+  }, [gainControlSignal]);
+
+  const handleGainControlSignal = signalRef => {
+    gainControlSignal = signalRef;
+  };
 
   return (
     <StyledEnvelope>
@@ -78,12 +83,12 @@ const EnvelopeElement = ({ trigger, register }) => {
           label="Fall"
           midiCC={9}
         ></Encoder>
-        <Encoder
-          value={envelopeGain}
-          onChange={setEnvelopeGain}
+        <SignalEncoder
           label="Gain"
           midiCC={10}
-        ></Encoder>
+          defaultValue={0.5}
+          registerSignal={handleGainControlSignal}
+        ></SignalEncoder>
       </Group>
     </StyledEnvelope>
   );
