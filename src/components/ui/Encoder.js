@@ -111,6 +111,26 @@ const Encoder = ({
     id.current = uniqueId("label_");
   }, []);
 
+  const avoidRollover = newValue => {
+    const MAGNTIC_RANGE = 0.02;
+
+    let correctedValue = newValue;
+
+    // Make ends of the spectrum magnetci
+    if (newValue < 0 + MAGNTIC_RANGE) {
+      correctedValue = 0;
+    }
+
+    if (newValue > 1 - MAGNTIC_RANGE) {
+      correctedValue = 1;
+    }
+
+    // Don't allow jumps from one end of the control to the other
+    if (Math.abs(value - correctedValue) <= 1 - MAGNTIC_RANGE) {
+      onChange(correctedValue);
+    }
+  };
+
   return (
     <ControlElement>
       <CircularWrapper>
@@ -119,7 +139,7 @@ const Encoder = ({
           aria-valuemax="1"
           aria-valuenow={value}
           value={value}
-          onChange={onChange}
+          onChange={avoidRollover}
           radius="40"
           aria-labelledby={id.current}
         >
