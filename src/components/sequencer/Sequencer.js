@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import update from "react-addons-update";
-import { Sequence, Transport } from "tone";
+import { Transport, Loop, Draw } from "tone";
 import clamp from "../../util/clamp";
-import fillArrayWithAscendingNumbers from "../../util/fillArrayWithAscendingNumbers";
 import styled from "astroturf";
 
+import SequencerNotes from "./SequencerNotes";
 import SequencerGrid from "./SequencerGrid";
 import SequencerMidiGrid from "./SequencerMidiGrid";
 import SequencerMidiButtons from "./SequencerMidiButtons";
@@ -14,87 +14,6 @@ import MidiContext from "../../midiContext";
 const StyledSequencer = styled("div")`
   grid-area: seq;
 `;
-
-const Sequencer = ({ setFrequency, triggerEnvelope }) => {
-  const STEP_COUNT = 8;
-  const GRID_WIDTH = 4;
-  const NOTE_MAPPING = ["F4", "G#4", "Bb4", "C4"];
-  // Y-Position is counted from top to bottom
-  const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(0));
-  const [currentStep, setCurrentStep] = useState(0);
-  const [xOffset, setXOffset] = useState(0);
-
-  const { midiInput } = useContext(MidiContext);
-
-  useEffect(
-    () => {
-      Transport.bpm.value = 60;
-      Transport.seconds = 0;
-      Transport.start();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  useEffect(() => {
-    const seq = new Sequence(
-      (time, step) => {
-        setFrequency({ frequency: NOTE_MAPPING[sequence[step]], time: time });
-        triggerEnvelope({ duration: 0.6, time: time });
-        setCurrentStep(step);
-      },
-      fillArrayWithAscendingNumbers(STEP_COUNT),
-      "4n"
-    );
-
-    seq.start(0);
-
-    return function cleanup() {
-      seq.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sequence, setFrequency, triggerEnvelope]);
-
-  const handleGridClick = ({ x, y }) => {
-    if (sequence[x] !== y) {
-      setSequence(update(sequence, { [x]: { $set: y } }));
-    }
-  };
-
-  const moveXOffset = useCallback(amount => {
-    setXOffset(offset =>
-      clamp({
-        number: offset + amount,
-        max: STEP_COUNT - GRID_WIDTH
-      })
-    );
-  }, []);
-
-  return (
-    <StyledSequencer>
-      <SequencerGrid
-        grid={sequence2Grid(sequence, currentStep)}
-        clickHandler={handleGridClick}
-      />
-      {midiInput && (
-        <div>
-          <SequencerMidiGrid
-            grid={cropGrid({
-              grid: sequence2Grid(sequence, currentStep),
-              xOffset: xOffset,
-              xWidth: GRID_WIDTH
-            })}
-          />
-          <SequencerMidiButtons
-            clickHandler={handleGridClick}
-            xOffset={xOffset}
-          />
-          <SequencerMidiTransportControls moveXOffset={moveXOffset} />
-        </div>
-      )}
-    </StyledSequencer>
-  );
-};
 
 const cropGrid = ({ grid, xOffset, xWidth }) => {
   const croppedArray = [];
@@ -123,6 +42,97 @@ const sequence2Grid = (sequence, currentStep) => {
   }
 
   return grid;
+};
+
+const Sequencer = ({ setFrequency, triggerEnvelope }) => {
+  const STEP_COUNT = 8;
+  const GRID_WIDTH = 4;
+  // Y-Position is counted from top to bottom
+  const [sequence, setSequence] = useState(Array(STEP_COUNT).fill(3));
+  const [currentStep, setCurrentStep] = useState(0);
+  const [triggerTime, setTriggerTime] = useState(0);
+  const [xOffset, setXOffset] = useState(0);
+  const [noteMapping, setNoteMapping] = useState([]);
+
+  const { midiInput } = useContext(MidiContext);
+
+  useEffect(
+    () => {
+      Transport.bpm.value = 60;
+      Transport.seconds = 0;
+      Transport.start();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    triggerEnvelope({ duration: 0.6, time: triggerTime });
+  }, [triggerEnvelope, triggerTime]);
+
+  useEffect(() => {
+    setFrequency({
+      frequency: noteMapping[sequence[currentStep]],
+      time: triggerTime
+    });
+  }, [currentStep, noteMapping, sequence, setFrequency, triggerTime]);
+
+  useEffect(() => {
+    const loop = new Loop(time => {
+      Draw.schedule(() => {
+        setCurrentStep(step => (step + 1) % STEP_COUNT);
+      }, time);
+
+      setTriggerTime(time);
+    }, "4n");
+
+    loop.start(0);
+
+    return function cleanup() {
+      loop.dispose();
+    };
+  }, []);
+
+  const handleGridClick = ({ x, y }) => {
+    if (sequence[x] !== y) {
+      setSequence(update(sequence, { [x]: { $set: y } }));
+    }
+  };
+
+  const moveXOffset = useCallback(amount => {
+    setXOffset(offset =>
+      clamp({
+        number: offset + amount,
+        max: STEP_COUNT - GRID_WIDTH
+      })
+    );
+  }, []);
+
+  return (
+    <StyledSequencer>
+      <SequencerNotes onChange={setNoteMapping}></SequencerNotes>
+      <SequencerGrid
+        grid={sequence2Grid(sequence, currentStep)}
+        clickHandler={handleGridClick}
+      />
+      {midiInput && (
+        <div>
+          <SequencerMidiGrid
+            grid={cropGrid({
+              grid: sequence2Grid(sequence, currentStep),
+              xOffset: xOffset,
+              xWidth: GRID_WIDTH
+            })}
+          />
+          <SequencerMidiButtons
+            clickHandler={handleGridClick}
+            xOffset={xOffset}
+          />
+          <SequencerMidiTransportControls moveXOffset={moveXOffset} />
+        </div>
+      )}
+    </StyledSequencer>
+  );
 };
 
 export default Sequencer;

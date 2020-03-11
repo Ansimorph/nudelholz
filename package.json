@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "astroturf": "^0.10.2",
+    "midi-note": "^1.0.0",
     "react": "^16.13.0",
     "react-addons-update": "^15.6.2",
     "react-circular-input": "^0.1.6",
