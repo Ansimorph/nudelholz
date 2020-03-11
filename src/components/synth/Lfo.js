@@ -67,13 +67,13 @@ const LFOElement = ({ register }) => {
 
   useEffect(() => {
     const delay = new Delay(0.01);
-    const lfoScale = new ScaleExp(-2, 10, 2);
+    const lfoScale = new ScaleExp(0.01, 10, 2);
 
     frequencyControlSignal.connect(delay);
     delay.connect(lfoScale);
     lfoScale.connect(lfoNode.current.frequency);
 
-    frequencyControlSignal.connect(signalMeter.current);
+    lfoNode.current.frequency.connect(signalMeter.current);
 
     return function cleanup() {
       lfoScale.dispose();
@@ -92,7 +92,7 @@ const LFOElement = ({ register }) => {
   }, [mixControlSignal]);
 
   useRaf(() => {
-    loopNode.current.interval = 0.11 - signalMeter.current.getValue() / 10;
+    loopNode.current.interval = 0.1 / signalMeter.current.getValue();
   }, signalMeter.current && loopNode.current && noiseNode.current);
 
   const handleFrequencyControlSignal = signalRef => {

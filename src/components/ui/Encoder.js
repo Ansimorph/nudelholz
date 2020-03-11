@@ -116,7 +116,7 @@ const Encoder = ({
 
     let correctedValue = newValue;
 
-    // Make ends of the spectrum magnetci
+    // Make ends of the spectrum magnetic
     if (newValue < 0 + MAGNTIC_RANGE) {
       correctedValue = 0;
     }
