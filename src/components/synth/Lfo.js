@@ -1,8 +1,17 @@
 import React, { useRef, useEffect } from "react";
-import { LFO, Gain, ScaleExp, Delay } from "tone";
+import {
+  LFO,
+  Gain,
+  ScaleExp,
+  Delay,
+  Loop,
+  CrossFade,
+  Signal,
+  Meter
+} from "tone";
 import styled from "astroturf";
+import useRaf from "@rooks/use-raf";
 
-import Encoder from "../ui/Encoder";
 import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
@@ -11,20 +20,36 @@ const StyledOscillator = styled("div")`
 `;
 
 const LFOElement = ({ register }) => {
-  const LfoNode = useRef();
+  const lfoNode = useRef();
+  const noiseNode = useRef();
+  const crossFade = useRef();
   const gainNode = useRef();
+  const loopNode = useRef();
+  const signalMeter = useRef();
   let frequencyControlSignal = useRef();
   let gainControlSignal = useRef();
+  let mixControlSignal = useRef();
 
   useEffect(() => {
-    LfoNode.current = new LFO("4n", -0.5, 0.5);
-    LfoNode.current.start();
+    lfoNode.current = new LFO("4n", -0.5, 0.5);
+    lfoNode.current.start();
 
+    signalMeter.current = new Meter();
+    noiseNode.current = new Signal(1);
+
+    loopNode.current = new Loop(time => {
+      noiseNode.current.value = Math.random() - 0.5;
+    }, 0.1).start(0);
+
+    crossFade.current = new CrossFade(0);
     gainNode.current = new Gain({
       gain: 0
     });
 
-    LfoNode.current.connect(gainNode.current);
+    noiseNode.current.connect(crossFade.current, 0, 1);
+    lfoNode.current.connect(crossFade.current, 0, 0);
+
+    crossFade.current.connect(gainNode.current);
 
     register(gainNode.current);
     // eslint-disable-next-line
@@ -41,18 +66,34 @@ const LFOElement = ({ register }) => {
   }, [gainControlSignal]);
 
   useEffect(() => {
-    const scale = new ScaleExp(-2, 10, 2);
     const delay = new Delay(0.01);
+    const lfoScale = new ScaleExp(-2, 10, 2);
 
-    frequencyControlSignal.connect(scale);
-    scale.connect(delay);
-    delay.connect(LfoNode.current.frequency);
+    frequencyControlSignal.connect(delay);
+    delay.connect(lfoScale);
+    lfoScale.connect(lfoNode.current.frequency);
+
+    frequencyControlSignal.connect(signalMeter.current);
 
     return function cleanup() {
-      scale.dispose();
+      lfoScale.dispose();
       delay.dispose();
     };
   }, [frequencyControlSignal]);
+
+  useEffect(() => {
+    const delay = new Delay(0.01);
+    mixControlSignal.connect(delay);
+    delay.connect(crossFade.current.fade);
+
+    return function cleanup() {
+      delay.dispose();
+    };
+  }, [mixControlSignal]);
+
+  useRaf(() => {
+    loopNode.current.interval = 0.11 - signalMeter.current.getValue() / 10;
+  }, signalMeter.current && loopNode.current && noiseNode.current);
 
   const handleFrequencyControlSignal = signalRef => {
     frequencyControlSignal = signalRef;
@@ -62,15 +103,24 @@ const LFOElement = ({ register }) => {
     gainControlSignal = signalRef;
   };
 
+  const handleMixControlSignal = signalRef => {
+    mixControlSignal = signalRef;
+  };
+
   return (
     <StyledOscillator>
       <Group title="LFO">
-        <Encoder value="" onChange="" label="Shape" midiCC={8}></Encoder>
         <SignalEncoder
           label="Rate"
           midiCC={8}
           defaultValue={0.1}
           registerSignal={handleFrequencyControlSignal}
+        ></SignalEncoder>
+        <SignalEncoder
+          label="Noise"
+          midiCC={8}
+          defaultValue={0.1}
+          registerSignal={handleMixControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Gain"
