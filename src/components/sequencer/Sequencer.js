@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import update from "react-addons-update";
-import { Transport, Loop, Draw } from "tone";
+import { Loop, Draw } from "tone";
 import clamp from "../../util/clamp";
 import styled from "astroturf";
 
@@ -56,18 +56,8 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
 
   const { midiInput } = useContext(MidiContext);
 
-  useEffect(
-    () => {
-      Transport.bpm.value = 60;
-      Transport.seconds = 0;
-      Transport.start();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
   useEffect(() => {
-    triggerEnvelope({ duration: 0.6, time: triggerTime });
+    triggerEnvelope({ duration: "8n", time: triggerTime });
   }, [triggerEnvelope, triggerTime]);
 
   useEffect(() => {
@@ -84,7 +74,7 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
       }, time);
 
       setTriggerTime(time);
-    }, "4n");
+    }, "8n");
 
     loop.start(0);
 

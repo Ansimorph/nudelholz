@@ -14,6 +14,8 @@ import Envelope from "./components/synth/Envelope";
 import Filter from "./components/synth/Filter";
 import Effects from "./components/synth/Effects";
 import Sequencer from "./components/sequencer/Sequencer";
+import PlayButton from "./components/transport/Play";
+import BpmControl from "./components/transport/Bpm";
 
 const App = () => {
   const [inputs, outputs] = useMIDI();
@@ -59,6 +61,7 @@ const App = () => {
       <ModulationContext.Provider value={modulation}>
         <Layout>
           <Title></Title>
+          <PlayButton></PlayButton>
           <SawtoothOscillator
             register={setOscillator1Ref}
             frequency={frequency}
@@ -75,6 +78,7 @@ const App = () => {
             registerOutput={setEffectsOutputRef}
           ></Effects>
           <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
+          <BpmControl></BpmControl>
           <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
         </Layout>
       </ModulationContext.Provider>

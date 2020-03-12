@@ -29,7 +29,9 @@ const Button = styled("button")`
 
 const Table = styled("table")`
   display: flex;
-  width: 100%;
+  margin-top: 28px;
+  margin-left: 6px;
+  margin-right: calc((var(--grid-gap) * 2) + 4px);
 `;
 
 const TableRow = styled("tr")`

@@ -9,13 +9,10 @@ const StyledGroup = styled("div")`
 const StyledEncoderGroup = styled("div")`
   display: grid;
   grid-gap: var(--grid-gap);
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 
-  &.direction-column {
+  @media (min-width: 600px) {
     grid-auto-flow: column;
-  }
-
-  &.direction-row {
-    grid-auto-flow: row;
   }
 `;
 
@@ -27,11 +24,11 @@ const GroupHeading = styled("h2")`
   color: var(--yellow);
 `;
 
-const Group = ({ title, children, direction = "column" }) => {
+const Group = ({ title, children }) => {
   return (
     <StyledGroup>
       <GroupHeading>{title}</GroupHeading>
-      <StyledEncoderGroup direction={direction}>{children}</StyledEncoderGroup>
+      <StyledEncoderGroup>{children}</StyledEncoderGroup>
     </StyledGroup>
   );
 };
