@@ -8,6 +8,7 @@ import {
 import { uniqueId } from "lodash";
 import MidiContext, { MIDI_CHANNEL } from "../../midiContext";
 import { useMIDIControl } from "@react-midi/hooks";
+import clamp from "../../util/clamp";
 
 const StyledCircularInput = styled(CircularInput)``;
 
@@ -89,6 +90,7 @@ const Encoder = ({
   onLfoChange,
   label,
   midiCC,
+  midiEndless = false,
   modulate,
   children
 }) => {
@@ -101,11 +103,17 @@ const Encoder = ({
 
   // Listen to MIDI
   useEffect(() => {
-    if (midiInput) {
-      onChange(midiControl.value / 127);
+    if (midiInput && midiControl.control === midiCC) {
+      if (midiEndless) {
+        const step = 0.05;
+        const delta = midiControl.value === 127 ? -step : step;
+        onChange(clamp({ number: value + delta, min: 0, max: 1 }));
+      } else {
+        onChange(midiControl.value / 127);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [midiControl.value, midiInput]);
+  }, [midiControl, midiInput]);
 
   // Setup unique ID to connect label and input
   useEffect(() => {

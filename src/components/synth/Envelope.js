@@ -89,17 +89,17 @@ const EnvelopeElement = ({ triggerTime, register }) => {
           value={attack}
           onChange={setAttack}
           label="Rise"
-          midiCC={8}
+          midiCC={12}
         ></Encoder>
         <Encoder
           value={decay}
           onChange={setDecay}
           label="Fall"
-          midiCC={9}
+          midiCC={13}
         ></Encoder>
         <SignalEncoder
           label="Gain"
-          midiCC={10}
+          midiCC={14}
           defaultValue={1}
           registerSignal={handleGainControlSignal}
         ></SignalEncoder>

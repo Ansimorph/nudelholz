@@ -112,19 +112,19 @@ const LFOElement = ({ register }) => {
       <Group title="LFO">
         <SignalEncoder
           label="Rate"
-          midiCC={8}
+          midiCC={5}
           defaultValue={0.1}
           registerSignal={handleFrequencyControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Noise"
-          midiCC={8}
+          midiCC={6}
           defaultValue={0.1}
           registerSignal={handleMixControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Gain"
-          midiCC={9}
+          midiCC={7}
           defaultValue={0.1}
           registerSignal={handleGainControlSignal}
         ></SignalEncoder>

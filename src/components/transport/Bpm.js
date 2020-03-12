@@ -24,7 +24,7 @@ const BpmControl = () => {
           value={bpm}
           onChange={setBpm}
           label={mapBpm(bpm)}
-          midiCC={8}
+          midiCC={15}
         ></Encoder>
       </Group>
     </StyledEnvelope>

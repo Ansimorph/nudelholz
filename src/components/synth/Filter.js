@@ -57,13 +57,13 @@ const FilterElement = ({ register }) => {
       <Group title="Filter">
         <SignalEncoder
           label="Freq"
-          midiCC={12}
+          midiCC={8}
           defaultValue={1}
           registerSignal={handleFrequencyControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Res"
-          midiCC={13}
+          midiCC={9}
           defaultValue={0}
           registerSignal={handleResonanceControlSignal}
         ></SignalEncoder>

@@ -38,7 +38,7 @@ const SequencerNotes = ({ onChange }) => {
           label={note(mapBaseNote(baseNote))}
           value={baseNote}
           onChange={setBaseNote}
-          midiCC={8}
+          midiCC={16}
         ></Encoder>
       </Group>
       <Group title="Notes">
@@ -46,19 +46,19 @@ const SequencerNotes = ({ onChange }) => {
           label={"+" + mapOffset(noteOffset1)}
           value={noteOffset1}
           onChange={setNoteOffset1}
-          midiCC={8}
+          midiCC={17}
         ></Encoder>
         <Encoder
           label={"+" + mapOffset(noteOffset2)}
           value={noteOffset2}
           onChange={setNoteOffset2}
-          midiCC={9}
+          midiCC={18}
         ></Encoder>
         <Encoder
           label={"+" + mapOffset(noteOffset3)}
           value={noteOffset3}
           onChange={setNoteOffset3}
-          midiCC={9}
+          midiCC={19}
         ></Encoder>
       </Group>
     </Group>

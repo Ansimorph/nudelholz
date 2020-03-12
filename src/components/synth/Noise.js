@@ -43,7 +43,7 @@ const NoiseElement = ({ register }) => {
           label="Gain"
           defaultValue={0}
           registerSignal={handleControlSignal}
-          midiCC={9}
+          midiCC={4}
         ></SignalEncoder>
       </Group>
     </StyledOscillator>

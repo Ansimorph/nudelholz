@@ -52,12 +52,14 @@ const SawtoothOscillator = ({ frequency, register }) => {
           value={spread}
           onChange={setSpread}
           label="Spread"
-          midiCC={8}
+          midiCC={0}
+          midiEndless={true}
         ></Encoder>
         <SignalEncoder
           label="Gain"
           defaultValue={1}
-          midiCC={9}
+          midiCC={1}
+          midiEndless={true}
           registerSignal={handleControlSignal}
         ></SignalEncoder>
       </Group>

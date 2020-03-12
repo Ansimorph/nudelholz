@@ -67,13 +67,13 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
       <Group title="Effects">
         <SignalEncoder
           label="Fold"
-          midiCC={14}
+          midiCC={10}
           defaultValue={0}
           registerSignal={handleFoldControlSignal}
         ></SignalEncoder>
         <SignalEncoder
           label="Room"
-          midiCC={15}
+          midiCC={11}
           defaultValue={0.2}
           registerSignal={handleReverbControlSignal}
         ></SignalEncoder>

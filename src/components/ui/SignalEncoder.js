@@ -26,7 +26,13 @@ const StyledLfoDot = styled("div")`
   background-color: var(--blue);
 `;
 
-const SignalEncoder = ({ defaultValue = 0, registerSignal, midiCC, label }) => {
+const SignalEncoder = ({
+  defaultValue = 0,
+  registerSignal,
+  midiCC,
+  midiEndless,
+  label
+}) => {
   const signalRef = useRef();
   const signalAdder = useRef();
   const signalMeter = useRef();
@@ -86,6 +92,7 @@ const SignalEncoder = ({ defaultValue = 0, registerSignal, midiCC, label }) => {
     <Encoder
       label={label}
       midiCC={midiCC}
+      midiEndless={midiEndless}
       value={value}
       modulate="true"
       onChange={setValue}

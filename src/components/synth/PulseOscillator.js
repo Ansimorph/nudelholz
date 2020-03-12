@@ -52,13 +52,15 @@ const PulseOscillatorElement = ({ frequency, register }) => {
       <Group title="Pulse">
         <SignalEncoder
           label="Width"
-          midiCC={8}
+          midiCC={2}
+          midiEndless={true}
           registerSignal={handleWidthControlSignal}
           defaultValue={0.25}
         ></SignalEncoder>
         <SignalEncoder
           label="Gain"
-          midiCC={9}
+          midiCC={3}
+          midiEndless={true}
           registerSignal={handleGainControlSignal}
           defaultValue={1}
         ></SignalEncoder>
