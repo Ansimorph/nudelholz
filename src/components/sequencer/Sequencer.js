@@ -57,7 +57,7 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
   const { midiInput } = useContext(MidiContext);
 
   useEffect(() => {
-    triggerEnvelope({ duration: "8n", time: triggerTime });
+    triggerEnvelope(triggerTime);
   }, [triggerEnvelope, triggerTime]);
 
   useEffect(() => {

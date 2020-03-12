@@ -31,7 +31,7 @@ const App = () => {
   const [effectsInputRef, setEffectsInputRef] = useState();
   const [effectsOutputRef, setEffectsOutputRef] = useState();
 
-  const [trigger, setTrigger] = useState([]);
+  const [trigger, setTrigger] = useState();
 
   const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
   const modulation = { lfoRef: lfoRef };
@@ -77,7 +77,7 @@ const App = () => {
             registerInput={setEffectsInputRef}
             registerOutput={setEffectsOutputRef}
           ></Effects>
-          <Envelope register={setEnvelopeRef} trigger={trigger}></Envelope>
+          <Envelope register={setEnvelopeRef} triggerTime={trigger}></Envelope>
           <BpmControl></BpmControl>
           <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
         </Layout>

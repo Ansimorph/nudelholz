@@ -1,23 +1,25 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Envelope, Gain, Signal, CrossFade } from "tone";
+import { Envelope, Gain, Signal, CrossFade, Time } from "tone";
 import styled from "astroturf";
 import Encoder from "../ui/Encoder";
 import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
+const BEAT_LENGTH = "8n";
+
 const StyledEnvelope = styled("div")`
   grid-area: env;
 `;
 
-const EnvelopeElement = ({ trigger, register }) => {
+const EnvelopeElement = ({ triggerTime, register }) => {
   const envelope = useRef();
   const gain = useRef();
   const linearSignal = useRef();
   const crossFade = useRef();
   let gainControlSignal = useRef();
 
-  const [attack, setAttack] = useState(0.25);
-  const [decay, setDecay] = useState(0.25);
+  const [attack, setAttack] = useState(0.1);
+  const [decay, setDecay] = useState(0.1);
 
   useEffect(() => {
     envelope.current = new Envelope({
@@ -47,18 +49,30 @@ const EnvelopeElement = ({ trigger, register }) => {
   }, []);
 
   useEffect(() => {
-    if (trigger) {
-      envelope.current.triggerAttackRelease(trigger.duration, trigger.time);
+    if (triggerTime) {
+      envelope.current.triggerAttack(triggerTime);
     }
-  }, [trigger]);
+  }, [triggerTime]);
+
+  const mapTime = time => {
+    return Time(BEAT_LENGTH).toSeconds() * time;
+  };
 
   useEffect(() => {
-    envelope.current.set("attack", attack * 2 + 0.01);
-  }, [attack]);
+    const beatTime = Time(BEAT_LENGTH);
+    let decayTime = mapTime(decay);
+    let attackTime = mapTime(attack);
 
-  useEffect(() => {
-    envelope.current.set("decay", decay * 2 + 0.01);
-  }, [decay]);
+    // ad is longer than beat shrink to fit
+    if (attackTime + decayTime > beatTime) {
+      const shrinkage = beatTime / (attackTime + decayTime);
+      decayTime *= shrinkage;
+      attackTime *= shrinkage;
+    }
+
+    envelope.current.set("attack", attackTime);
+    envelope.current.set("decay", decayTime);
+  }, [attack, decay]);
 
   useEffect(() => {
     gainControlSignal.connect(crossFade.current.fade);
@@ -86,7 +100,7 @@ const EnvelopeElement = ({ trigger, register }) => {
         <SignalEncoder
           label="Gain"
           midiCC={10}
-          defaultValue={0.5}
+          defaultValue={1}
           registerSignal={handleGainControlSignal}
         ></SignalEncoder>
       </Group>
