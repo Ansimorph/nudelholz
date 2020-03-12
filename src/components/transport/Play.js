@@ -4,6 +4,7 @@ import styled from "astroturf";
 
 const StyledButton = styled("button")`
   grid-area: play;
+  align-self: center;
   border-radius: 50%;
   border: 0;
   background-color: var(--yellow);

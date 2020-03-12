@@ -4,11 +4,15 @@ import styled from "astroturf";
 const StyledTitle = styled("h1")`
   grid-area: logo;
   text-align: left;
-  font-size: 100px;
   color: var(--yellow);
   line-height: 0.8;
   font-weight: normal;
   margin: 0 0 20px 0;
+  font-size: 70px;
+
+  @media (min-width: 600px) {
+    font-size: 100px;
+  }
 
   span:nth-child(1) {
     letter-spacing: -0.018em;

@@ -32,31 +32,35 @@ const SequencerNotes = ({ onChange }) => {
   }, [baseNote, noteOffset1, noteOffset2, noteOffset3, onChange]);
 
   return (
-    <Group title="Notes">
-      <Encoder
-        label={note(mapBaseNote(baseNote))}
-        value={baseNote}
-        onChange={setBaseNote}
-        midiCC={8}
-      ></Encoder>
-      <Encoder
-        label={"+" + mapOffset(noteOffset1)}
-        value={noteOffset1}
-        onChange={setNoteOffset1}
-        midiCC={8}
-      ></Encoder>
-      <Encoder
-        label={"+" + mapOffset(noteOffset2)}
-        value={noteOffset2}
-        onChange={setNoteOffset2}
-        midiCC={9}
-      ></Encoder>
-      <Encoder
-        label={"+" + mapOffset(noteOffset3)}
-        value={noteOffset3}
-        onChange={setNoteOffset3}
-        midiCC={9}
-      ></Encoder>
+    <Group>
+      <Group title="Base">
+        <Encoder
+          label={note(mapBaseNote(baseNote))}
+          value={baseNote}
+          onChange={setBaseNote}
+          midiCC={8}
+        ></Encoder>
+      </Group>
+      <Group title="Notes">
+        <Encoder
+          label={"+" + mapOffset(noteOffset1)}
+          value={noteOffset1}
+          onChange={setNoteOffset1}
+          midiCC={8}
+        ></Encoder>
+        <Encoder
+          label={"+" + mapOffset(noteOffset2)}
+          value={noteOffset2}
+          onChange={setNoteOffset2}
+          midiCC={9}
+        ></Encoder>
+        <Encoder
+          label={"+" + mapOffset(noteOffset3)}
+          value={noteOffset3}
+          onChange={setNoteOffset3}
+          midiCC={9}
+        ></Encoder>
+      </Group>
     </Group>
   );
 };

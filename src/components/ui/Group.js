@@ -2,17 +2,22 @@ import React from "react";
 import styled from "astroturf";
 
 const StyledGroup = styled("div")`
-  margin-right: calc(var(--grid-gap) * 2);
+  margin-right: calc(var(--grid-gap) / 2);
   margin-bottom: calc(var(--grid-gap) / 2);
+
+  @media (min-width: 600px) {
+    margin-right: calc(var(--grid-gap) * 2);
+  }
 `;
 
 const StyledEncoderGroup = styled("div")`
   display: grid;
   grid-gap: var(--grid-gap);
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, var(--encoder-size));
 
   @media (min-width: 600px) {
     grid-auto-flow: column;
+    grid-template-columns: auto;
   }
 `;
 
@@ -27,7 +32,7 @@ const GroupHeading = styled("h2")`
 const Group = ({ title, children }) => {
   return (
     <StyledGroup>
-      <GroupHeading>{title}</GroupHeading>
+      {title && <GroupHeading>{title}</GroupHeading>}
       <StyledEncoderGroup>{children}</StyledEncoderGroup>
     </StyledGroup>
   );

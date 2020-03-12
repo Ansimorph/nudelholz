@@ -74,7 +74,7 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
         <SignalEncoder
           label="Room"
           midiCC={15}
-          defaultValue={0}
+          defaultValue={0.2}
           registerSignal={handleReverbControlSignal}
         ></SignalEncoder>
       </Group>

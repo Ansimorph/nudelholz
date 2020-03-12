@@ -24,6 +24,7 @@ body {
   --stroke-width: 8;
   --grid-gap: 18px;
   --button-size: 40px;
+  --encoder-size: 88px;
 }
 
 html {

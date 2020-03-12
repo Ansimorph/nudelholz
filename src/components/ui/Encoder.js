@@ -43,14 +43,15 @@ const Label = styled("text")`
 
 const ControlElement = styled("article")`
   display: flex;
+  width: var(--encoder-size);
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const LfoButton = styled("button")`
-  align-self: flex-end;
-  margin-right: -28px;
+  align-self: flex-start;
   margin-top: -10px;
+  margin-left: calc(var(--button-size) * 2 - 2px);
   width: var(--button-size);
   height: var(--button-size);
   border-radius: 50%;
