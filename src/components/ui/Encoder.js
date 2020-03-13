@@ -51,6 +51,7 @@ const ControlElement = styled("article")`
 
 const LfoButton = styled("button")`
   align-self: flex-start;
+  padding: 0;
   margin-top: -10px;
   margin-left: calc(var(--button-size) * 2 - 2px);
   width: var(--button-size);
