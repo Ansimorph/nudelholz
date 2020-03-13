@@ -90,6 +90,7 @@ const Encoder = ({
   lfoActive,
   onLfoChange,
   label,
+  valueText,
   midiCC,
   midiEndless = false,
   modulate,
@@ -147,7 +148,8 @@ const Encoder = ({
         <StyledCircularInput
           aria-valuemin="0"
           aria-valuemax="1"
-          aria-valuenow={value}
+          aria-valuenow={Math.round(value * 100) / 100}
+          aria-valuetext={valueText ? label : null}
           value={value}
           onChange={avoidRollover}
           radius="40"
