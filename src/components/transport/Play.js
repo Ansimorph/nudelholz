@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Transport } from "tone";
+import Tone, { Transport } from "tone";
 import styled from "astroturf";
 
 const StyledButton = styled("button")`
@@ -30,7 +30,9 @@ const PlayButton = () => {
     Transport.seconds = 0;
 
     if (playing) {
-      Transport.start();
+      Tone.start().then(() => {
+        Transport.start();
+      });
     } else {
       Transport.stop();
     }
