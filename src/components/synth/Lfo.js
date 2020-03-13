@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import {
   LFO,
   Gain,
@@ -12,6 +12,7 @@ import {
 import styled from "astroturf";
 import useRaf from "@rooks/use-raf";
 
+import PlayStateContext from "../../playStateContext";
 import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
 
@@ -19,7 +20,8 @@ const StyledOscillator = styled("div")`
   grid-area: lfo;
 `;
 
-const LFOElement = ({ register, playing }) => {
+const LFOElement = ({ register }) => {
+  const { playing } = useContext(PlayStateContext);
   const lfoNode = useRef();
   const noiseNode = useRef();
   const crossFade = useRef();
@@ -31,34 +33,38 @@ const LFOElement = ({ register, playing }) => {
   let mixControlSignal = useRef();
 
   useEffect(() => {
-    if (playing) {
-      lfoNode.current = new LFO("4n", -0.5, 0.5);
-      lfoNode.current.start();
+    lfoNode.current = new LFO("4n", -0.5, 0.5);
 
-      signalMeter.current = new Meter();
-      noiseNode.current = new Signal(1);
+    signalMeter.current = new Meter();
+    noiseNode.current = new Signal(1);
 
-      loopNode.current = new Loop(time => {
-        noiseNode.current.value = Math.random() - 0.5;
-      }, 0.1).start(0);
+    loopNode.current = new Loop(time => {
+      noiseNode.current.value = Math.random() - 0.5;
+    }, 0.1);
 
-      crossFade.current = new CrossFade(0);
-      gainNode.current = new Gain({
-        gain: 0
-      });
+    crossFade.current = new CrossFade(0);
+    gainNode.current = new Gain({
+      gain: 0
+    });
 
-      noiseNode.current.connect(crossFade.current, 0, 1);
-      lfoNode.current.connect(crossFade.current, 0, 0);
+    noiseNode.current.connect(crossFade.current, 0, 1);
+    lfoNode.current.connect(crossFade.current, 0, 0);
 
-      crossFade.current.connect(gainNode.current);
+    crossFade.current.connect(gainNode.current);
 
-      register(gainNode.current);
-    }
+    register(gainNode.current);
     // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (playing) {
+      lfoNode.current.start();
+      loopNode.current.start(0);
+    }
   }, [playing]);
 
   useEffect(() => {
-    if (gainNode.current) {
+    if (gainNode.current && gainControlSignal) {
       const delay = new Delay(0.01);
       gainControlSignal.connect(delay);
       delay.connect(gainNode.current.gain);
@@ -70,7 +76,7 @@ const LFOElement = ({ register, playing }) => {
   }, [gainControlSignal]);
 
   useEffect(() => {
-    if (lfoNode.current) {
+    if (lfoNode.current && frequencyControlSignal) {
       const delay = new Delay(0.01);
       const lfoScale = new ScaleExp(0.01, 10, 2);
 
@@ -88,7 +94,7 @@ const LFOElement = ({ register, playing }) => {
   }, [frequencyControlSignal]);
 
   useEffect(() => {
-    if (crossFade.current) {
+    if (crossFade.current && mixControlSignal) {
       const delay = new Delay(0.01);
       mixControlSignal.connect(delay);
       delay.connect(crossFade.current.fade);

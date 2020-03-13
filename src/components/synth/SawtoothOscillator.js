@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { FatOscillator, Gain } from "tone";
 import styled from "astroturf";
 
+import PlayStateContext from "../../playStateContext";
 import Encoder from "../ui/Encoder";
 import SignalEncoder from "../ui/SignalEncoder";
 import Group from "../ui/Group";
@@ -10,7 +11,8 @@ const StyledOscillator = styled("div")`
   grid-area: osc1;
 `;
 
-const SawtoothOscillator = ({ frequency, register, playing }) => {
+const SawtoothOscillator = ({ frequency, register }) => {
+  const { playing } = useContext(PlayStateContext);
   const oscillator = useRef();
   const gainNode = useRef();
   let controlSignal = useRef();
@@ -18,21 +20,22 @@ const SawtoothOscillator = ({ frequency, register, playing }) => {
   const [spread, setSpread] = useState(0);
 
   useEffect(() => {
-    if (playing) {
-      oscillator.current = new FatOscillator("C#4", "sawtooth");
-      oscillator.current.start();
+    oscillator.current = new FatOscillator("C#4", "sawtooth");
+    gainNode.current = new Gain();
 
-      gainNode.current = new Gain();
-
-      oscillator.current.connect(gainNode.current);
-
-      register(gainNode.current);
-    }
+    oscillator.current.connect(gainNode.current);
+    register(gainNode.current);
     // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (playing) {
+      oscillator.current.start();
+    }
   }, [playing]);
 
   useEffect(() => {
-    if (oscillator.current) {
+    if (oscillator.current && frequency) {
       oscillator.current.set("frequency", frequency.frequency, frequency.time);
     }
   }, [frequency]);
@@ -44,7 +47,7 @@ const SawtoothOscillator = ({ frequency, register, playing }) => {
   }, [spread]);
 
   useEffect(() => {
-    if (gainNode.current) {
+    if (gainNode.current && controlSignal) {
       controlSignal.connect(gainNode.current.gain);
     }
   }, [controlSignal]);

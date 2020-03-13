@@ -9,10 +9,10 @@ const StyledFilter = styled("div")`
 `;
 
 const EffectsElement = ({ registerInput, registerOutput }) => {
-  let input = useRef();
-  let shaper = useRef();
-  let crossFadeFold = useRef();
-  let reverbNode = useRef();
+  const input = useRef();
+  const shaper = useRef();
+  const crossFadeFold = useRef();
+  const reverbNode = useRef();
   let foldControlSignal = useRef();
   let reverbControlSignal = useRef();
 
@@ -47,11 +47,15 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
   }, []);
 
   useEffect(() => {
-    reverbControlSignal.connect(reverbNode.current.wet);
+    if (reverbControlSignal) {
+      reverbControlSignal.connect(reverbNode.current.wet);
+    }
   }, [reverbControlSignal]);
 
   useEffect(() => {
-    foldControlSignal.connect(crossFadeFold.current.fade);
+    if (foldControlSignal) {
+      foldControlSignal.connect(crossFadeFold.current.fade);
+    }
   }, [foldControlSignal]);
 
   const handleReverbControlSignal = signalRef => {

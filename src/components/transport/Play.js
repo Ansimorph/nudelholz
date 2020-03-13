@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import Tone, { Transport } from "tone";
 import styled from "astroturf";
+import PlayStateContext from "../../playStateContext";
 
 const StyledButton = styled("button")`
   grid-area: play;
@@ -42,7 +43,9 @@ const StyledButton = styled("button")`
   }
 `;
 
-const PlayButton = ({ playing, onChange }) => {
+const PlayButton = () => {
+  const { playing, onChange } = useContext(PlayStateContext);
+
   const play = () => {
     if (!playing) {
       Tone.start().then(() => {

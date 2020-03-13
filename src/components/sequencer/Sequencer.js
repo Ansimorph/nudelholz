@@ -10,6 +10,7 @@ import SequencerMidiGrid from "./SequencerMidiGrid";
 import SequencerMidiButtons from "./SequencerMidiButtons";
 import SequencerMidiTransportControls from "./SequencerMidiTransportControls";
 import MidiContext from "../../midiContext";
+import PlayStateContext from "../../playStateContext";
 
 const StyledSequencer = styled("div")`
   grid-area: seq;
@@ -44,7 +45,8 @@ const sequence2Grid = (sequence, currentStep) => {
   return grid;
 };
 
-const Sequencer = ({ setFrequency, triggerEnvelope, playing }) => {
+const Sequencer = ({ setFrequency, triggerEnvelope }) => {
+  const { playing } = useContext(PlayStateContext);
   const STEP_COUNT = 8;
   const GRID_WIDTH = 4;
   // Y-Position is counted from top to bottom

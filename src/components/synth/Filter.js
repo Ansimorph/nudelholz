@@ -21,28 +21,28 @@ const FilterElement = ({ register }) => {
   }, []);
 
   useEffect(() => {
-    const scale = new ScaleExp(0, 20000, 2);
-    frequencyControlSignal.connect(scale);
-    scale.connect(filter.current.frequency);
+    if (frequencyControlSignal) {
+      const scale = new ScaleExp(0, 20000, 2);
+      frequencyControlSignal.connect(scale);
+      scale.connect(filter.current.frequency);
 
-    return function cleanup() {
-      scale.dispose();
-    };
-  }, [resonanceControlSignal]);
-
-  useEffect(() => {
-    const scale = new Scale(0, 10);
-    resonanceControlSignal.connect(scale);
-    scale.connect(filter.current.Q);
-
-    return function cleanup() {
-      scale.dispose();
-    };
-  }, [resonanceControlSignal]);
-
-  useEffect(() => {
-    frequencyControlSignal.connect(filter.current.frequency);
+      return function cleanup() {
+        scale.dispose();
+      };
+    }
   }, [frequencyControlSignal]);
+
+  useEffect(() => {
+    if (resonanceControlSignal) {
+      const scale = new Scale(0, 10);
+      resonanceControlSignal.connect(scale);
+      scale.connect(filter.current.Q);
+
+      return function cleanup() {
+        scale.dispose();
+      };
+    }
+  }, [resonanceControlSignal]);
 
   const handleFrequencyControlSignal = signalRef => {
     frequencyControlSignal = signalRef;

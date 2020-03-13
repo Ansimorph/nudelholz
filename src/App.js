@@ -7,6 +7,7 @@ import Title from "./components/ui/Title";
 import Links from "./components/ui/Links";
 import MidiContext from "./midiContext";
 import ModulationContext from "./modulationContext";
+import PlayStateContext from "./playStateContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
 import PulseOscillator from "./components/synth/PulseOscillator";
 import Noise from "./components/synth/Noise";
@@ -37,6 +38,7 @@ const App = () => {
 
   const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
   const modulation = { lfoRef: lfoRef };
+  const playState = { playing: playing, onChange: setPlaying };
 
   // Setup Wiring between audio nodes
   useEffect(() => {
@@ -61,35 +63,37 @@ const App = () => {
   return (
     <MidiContext.Provider value={midi}>
       <ModulationContext.Provider value={modulation}>
-        <Layout>
-          <Title></Title>
-          <PlayButton playing={playing} onChange={setPlaying}></PlayButton>
-          <SawtoothOscillator
-            playing={playing}
-            register={setOscillator1Ref}
-            frequency={frequency}
-          />
-          <PulseOscillator
-            playing={playing}
-            register={setOscillator2Ref}
-            frequency={frequency}
-          ></PulseOscillator>
-          <Noise playing={playing} register={setNoiseRef}></Noise>
-          <LFO playing={playing} register={setLfoRef}></LFO>
-          <Filter register={setFilterRef}></Filter>
-          <Effects
-            registerInput={setEffectsInputRef}
-            registerOutput={setEffectsOutputRef}
-          ></Effects>
-          <Envelope register={setEnvelopeRef} triggerTime={trigger}></Envelope>
-          <BpmControl></BpmControl>
-          <Sequencer
-            playing={playing}
-            setFrequency={setFrequency}
-            triggerEnvelope={setTrigger}
-          />
-        </Layout>
-        <Links></Links>
+        <PlayStateContext.Provider value={playState}>
+          <Layout>
+            <Title></Title>
+            <PlayButton></PlayButton>
+            <SawtoothOscillator
+              register={setOscillator1Ref}
+              frequency={frequency}
+            />
+            <PulseOscillator
+              register={setOscillator2Ref}
+              frequency={frequency}
+            ></PulseOscillator>
+            <Noise register={setNoiseRef}></Noise>
+            <LFO register={setLfoRef}></LFO>
+            <Filter register={setFilterRef}></Filter>
+            <Effects
+              registerInput={setEffectsInputRef}
+              registerOutput={setEffectsOutputRef}
+            ></Effects>
+            <Envelope
+              register={setEnvelopeRef}
+              triggerTime={trigger}
+            ></Envelope>
+            <BpmControl></BpmControl>
+            <Sequencer
+              setFrequency={setFrequency}
+              triggerEnvelope={setTrigger}
+            />
+          </Layout>
+          <Links></Links>
+        </PlayStateContext.Provider>
       </ModulationContext.Provider>
     </MidiContext.Provider>
   );

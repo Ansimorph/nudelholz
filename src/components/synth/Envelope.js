@@ -59,23 +59,27 @@ const EnvelopeElement = ({ triggerTime, register }) => {
   };
 
   useEffect(() => {
-    const beatTime = Time(BEAT_LENGTH);
-    let decayTime = mapTime(decay);
-    let attackTime = mapTime(attack);
+    if (envelope.current) {
+      const beatTime = Time(BEAT_LENGTH);
+      let decayTime = mapTime(decay);
+      let attackTime = mapTime(attack);
 
-    // ad is longer than beat shrink to fit
-    if (attackTime + decayTime > beatTime) {
-      const shrinkage = beatTime / (attackTime + decayTime);
-      decayTime *= shrinkage;
-      attackTime *= shrinkage;
+      // ad is longer than beat shrink to fit
+      if (attackTime + decayTime > beatTime) {
+        const shrinkage = beatTime / (attackTime + decayTime);
+        decayTime *= shrinkage;
+        attackTime *= shrinkage;
+      }
+
+      envelope.current.set("attack", attackTime);
+      envelope.current.set("decay", decayTime);
     }
-
-    envelope.current.set("attack", attackTime);
-    envelope.current.set("decay", decayTime);
   }, [attack, decay]);
 
   useEffect(() => {
-    gainControlSignal.connect(crossFade.current.fade);
+    if (crossFade.current && gainControlSignal) {
+      gainControlSignal.connect(crossFade.current.fade);
+    }
   }, [gainControlSignal]);
 
   const handleGainControlSignal = signalRef => {
