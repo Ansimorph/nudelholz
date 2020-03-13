@@ -9,27 +9,31 @@ const StyledOscillator = styled("div")`
   grid-area: noise;
 `;
 
-const NoiseElement = ({ register }) => {
+const NoiseElement = ({ register, playing }) => {
   const noise = useRef();
   const gainNode = useRef();
   let controlSignal = useRef();
 
   useEffect(() => {
-    noise.current = new Noise("pink");
-    noise.current.start();
+    if (playing) {
+      noise.current = new Noise("pink");
+      noise.current.start();
 
-    gainNode.current = new Gain({
-      gain: 0
-    });
+      gainNode.current = new Gain({
+        gain: 0
+      });
 
-    noise.current.connect(gainNode.current);
+      noise.current.connect(gainNode.current);
 
-    register(gainNode.current);
+      register(gainNode.current);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [playing]);
 
   useEffect(() => {
-    controlSignal.connect(gainNode.current.gain);
+    if (gainNode.current) {
+      controlSignal.connect(gainNode.current.gain);
+    }
   }, [controlSignal]);
 
   const handleControlSignal = signalRef => {

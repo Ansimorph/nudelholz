@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Tone, { Transport } from "tone";
 import styled from "astroturf";
 
@@ -20,27 +20,45 @@ const StyledButton = styled("button")`
     outline: none;
     box-shadow: var(--focus-box-shadow);
   }
+
+  &.playing-false {
+    > span {
+      animation: pulse 1s infinite;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0;
+    }
+    49% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 `;
 
-const PlayButton = () => {
-  const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    Transport.bpm.value = 60;
-    Transport.seconds = 0;
-
-    if (playing) {
+const PlayButton = ({ playing, onChange }) => {
+  const play = () => {
+    if (!playing) {
       Tone.start().then(() => {
+        onChange(true);
         Transport.start();
       });
     } else {
       Transport.stop();
+      onChange(false);
     }
-  }, [playing]);
+  };
 
   return (
-    <StyledButton onClick={() => setPlaying(!playing)}>
-      {playing ? "Stop" : "Play"}
+    <StyledButton onClick={() => play()} playing={playing.toString()}>
+      <span>{playing ? "Stop" : "Play"}</span>
     </StyledButton>
   );
 };

@@ -9,34 +9,42 @@ const StyledOscillator = styled("div")`
   grid-area: osc2;
 `;
 
-const PulseOscillatorElement = ({ frequency, register }) => {
+const PulseOscillatorElement = ({ frequency, register, playing }) => {
   const oscillator = useRef();
   const gainNode = useRef();
   let gainControlSignal = useRef();
   let widthControlSignal = useRef();
 
   useEffect(() => {
-    oscillator.current = new PulseOscillator();
-    oscillator.current.start();
+    if (playing) {
+      oscillator.current = new PulseOscillator();
+      oscillator.current.start();
 
-    gainNode.current = new Gain();
+      gainNode.current = new Gain();
 
-    oscillator.current.connect(gainNode.current);
+      oscillator.current.connect(gainNode.current);
 
-    register(gainNode.current);
+      register(gainNode.current);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [playing]);
 
   useEffect(() => {
-    oscillator.current.set("frequency", frequency.frequency, frequency.time);
+    if (oscillator.current) {
+      oscillator.current.set("frequency", frequency.frequency, frequency.time);
+    }
   }, [frequency]);
 
   useEffect(() => {
-    gainControlSignal.connect(gainNode.current.gain);
+    if (gainNode.current) {
+      gainControlSignal.connect(gainNode.current.gain);
+    }
   }, [gainControlSignal]);
 
   useEffect(() => {
-    widthControlSignal.connect(oscillator.current.width);
+    if (oscillator.current) {
+      widthControlSignal.connect(oscillator.current.width);
+    }
   }, [widthControlSignal]);
 
   const handleGainControlSignal = signalRef => {

@@ -19,7 +19,7 @@ const StyledOscillator = styled("div")`
   grid-area: lfo;
 `;
 
-const LFOElement = ({ register }) => {
+const LFOElement = ({ register, playing }) => {
   const lfoNode = useRef();
   const noiseNode = useRef();
   const crossFade = useRef();
@@ -31,64 +31,72 @@ const LFOElement = ({ register }) => {
   let mixControlSignal = useRef();
 
   useEffect(() => {
-    lfoNode.current = new LFO("4n", -0.5, 0.5);
-    lfoNode.current.start();
+    if (playing) {
+      lfoNode.current = new LFO("4n", -0.5, 0.5);
+      lfoNode.current.start();
 
-    signalMeter.current = new Meter();
-    noiseNode.current = new Signal(1);
+      signalMeter.current = new Meter();
+      noiseNode.current = new Signal(1);
 
-    loopNode.current = new Loop(time => {
-      noiseNode.current.value = Math.random() - 0.5;
-    }, 0.1).start(0);
+      loopNode.current = new Loop(time => {
+        noiseNode.current.value = Math.random() - 0.5;
+      }, 0.1).start(0);
 
-    crossFade.current = new CrossFade(0);
-    gainNode.current = new Gain({
-      gain: 0
-    });
+      crossFade.current = new CrossFade(0);
+      gainNode.current = new Gain({
+        gain: 0
+      });
 
-    noiseNode.current.connect(crossFade.current, 0, 1);
-    lfoNode.current.connect(crossFade.current, 0, 0);
+      noiseNode.current.connect(crossFade.current, 0, 1);
+      lfoNode.current.connect(crossFade.current, 0, 0);
 
-    crossFade.current.connect(gainNode.current);
+      crossFade.current.connect(gainNode.current);
 
-    register(gainNode.current);
+      register(gainNode.current);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [playing]);
 
   useEffect(() => {
-    const delay = new Delay(0.01);
-    gainControlSignal.connect(delay);
-    delay.connect(gainNode.current.gain);
+    if (gainNode.current) {
+      const delay = new Delay(0.01);
+      gainControlSignal.connect(delay);
+      delay.connect(gainNode.current.gain);
 
-    return function cleanup() {
-      delay.dispose();
-    };
+      return function cleanup() {
+        delay.dispose();
+      };
+    }
   }, [gainControlSignal]);
 
   useEffect(() => {
-    const delay = new Delay(0.01);
-    const lfoScale = new ScaleExp(0.01, 10, 2);
+    if (lfoNode.current) {
+      const delay = new Delay(0.01);
+      const lfoScale = new ScaleExp(0.01, 10, 2);
 
-    frequencyControlSignal.connect(delay);
-    delay.connect(lfoScale);
-    lfoScale.connect(lfoNode.current.frequency);
+      frequencyControlSignal.connect(delay);
+      delay.connect(lfoScale);
+      lfoScale.connect(lfoNode.current.frequency);
 
-    lfoNode.current.frequency.connect(signalMeter.current);
+      lfoNode.current.frequency.connect(signalMeter.current);
 
-    return function cleanup() {
-      lfoScale.dispose();
-      delay.dispose();
-    };
+      return function cleanup() {
+        lfoScale.dispose();
+        delay.dispose();
+      };
+    }
   }, [frequencyControlSignal]);
 
   useEffect(() => {
-    const delay = new Delay(0.01);
-    mixControlSignal.connect(delay);
-    delay.connect(crossFade.current.fade);
+    if (crossFade.current) {
+      const delay = new Delay(0.01);
+      mixControlSignal.connect(delay);
+      delay.connect(crossFade.current.fade);
 
-    return function cleanup() {
-      delay.dispose();
-    };
+      return function cleanup() {
+        delay.dispose();
+      };
+    }
   }, [mixControlSignal]);
 
   useRaf(() => {

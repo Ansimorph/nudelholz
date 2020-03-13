@@ -44,7 +44,7 @@ const sequence2Grid = (sequence, currentStep) => {
   return grid;
 };
 
-const Sequencer = ({ setFrequency, triggerEnvelope }) => {
+const Sequencer = ({ setFrequency, triggerEnvelope, playing }) => {
   const STEP_COUNT = 8;
   const GRID_WIDTH = 4;
   // Y-Position is counted from top to bottom
@@ -68,20 +68,22 @@ const Sequencer = ({ setFrequency, triggerEnvelope }) => {
   }, [currentStep, noteMapping, sequence, setFrequency, triggerTime]);
 
   useEffect(() => {
-    const loop = new Loop(time => {
-      Draw.schedule(() => {
-        setCurrentStep(step => (step + 1) % STEP_COUNT);
-      }, time);
+    if (playing) {
+      const loop = new Loop(time => {
+        Draw.schedule(() => {
+          setCurrentStep(step => (step + 1) % STEP_COUNT);
+        }, time);
 
-      setTriggerTime(time);
-    }, "8n");
+        setTriggerTime(time);
+      }, "8n");
 
-    loop.start(0);
+      loop.start(0);
 
-    return function cleanup() {
-      loop.dispose();
-    };
-  }, []);
+      return function cleanup() {
+        loop.dispose();
+      };
+    }
+  }, [playing]);
 
   const handleGridClick = ({ x, y }) => {
     if (sequence[x] !== y) {

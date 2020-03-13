@@ -20,7 +20,7 @@ import BpmControl from "./components/transport/Bpm";
 const App = () => {
   const [inputs, outputs] = useMIDI();
 
-  const [frequency, setFrequency] = useState({ frequency: 0, time: 0 });
+  const [frequency, setFrequency] = useState();
 
   const [oscillator1Ref, setOscillator1Ref] = useState();
   const [oscillator2Ref, setOscillator2Ref] = useState();
@@ -31,6 +31,7 @@ const App = () => {
   const [effectsInputRef, setEffectsInputRef] = useState();
   const [effectsOutputRef, setEffectsOutputRef] = useState();
 
+  const [playing, setPlaying] = useState(false);
   const [trigger, setTrigger] = useState();
 
   const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
@@ -61,17 +62,19 @@ const App = () => {
       <ModulationContext.Provider value={modulation}>
         <Layout>
           <Title></Title>
-          <PlayButton></PlayButton>
+          <PlayButton playing={playing} onChange={setPlaying}></PlayButton>
           <SawtoothOscillator
+            playing={playing}
             register={setOscillator1Ref}
             frequency={frequency}
           />
           <PulseOscillator
+            playing={playing}
             register={setOscillator2Ref}
             frequency={frequency}
           ></PulseOscillator>
-          <Noise register={setNoiseRef}></Noise>
-          <LFO register={setLfoRef}></LFO>
+          <Noise playing={playing} register={setNoiseRef}></Noise>
+          <LFO playing={playing} register={setLfoRef}></LFO>
           <Filter register={setFilterRef}></Filter>
           <Effects
             registerInput={setEffectsInputRef}
@@ -79,7 +82,11 @@ const App = () => {
           ></Effects>
           <Envelope register={setEnvelopeRef} triggerTime={trigger}></Envelope>
           <BpmControl></BpmControl>
-          <Sequencer setFrequency={setFrequency} triggerEnvelope={setTrigger} />
+          <Sequencer
+            playing={playing}
+            setFrequency={setFrequency}
+            triggerEnvelope={setTrigger}
+          />
         </Layout>
       </ModulationContext.Provider>
     </MidiContext.Provider>

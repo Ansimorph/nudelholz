@@ -10,7 +10,7 @@ const StyledOscillator = styled("div")`
   grid-area: osc1;
 `;
 
-const SawtoothOscillator = ({ frequency, register }) => {
+const SawtoothOscillator = ({ frequency, register, playing }) => {
   const oscillator = useRef();
   const gainNode = useRef();
   let controlSignal = useRef();
@@ -18,27 +18,35 @@ const SawtoothOscillator = ({ frequency, register }) => {
   const [spread, setSpread] = useState(0);
 
   useEffect(() => {
-    oscillator.current = new FatOscillator("C#4", "sawtooth");
-    oscillator.current.start();
+    if (playing) {
+      oscillator.current = new FatOscillator("C#4", "sawtooth");
+      oscillator.current.start();
 
-    gainNode.current = new Gain();
+      gainNode.current = new Gain();
 
-    oscillator.current.connect(gainNode.current);
+      oscillator.current.connect(gainNode.current);
 
-    register(gainNode.current);
+      register(gainNode.current);
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [playing]);
 
   useEffect(() => {
-    oscillator.current.set("frequency", frequency.frequency, frequency.time);
+    if (oscillator.current) {
+      oscillator.current.set("frequency", frequency.frequency, frequency.time);
+    }
   }, [frequency]);
 
   useEffect(() => {
-    oscillator.current.set("spread", spread * 20);
+    if (oscillator.current) {
+      oscillator.current.set("spread", spread * 20);
+    }
   }, [spread]);
 
   useEffect(() => {
-    controlSignal.connect(gainNode.current.gain);
+    if (gainNode.current) {
+      controlSignal.connect(gainNode.current.gain);
+    }
   }, [controlSignal]);
 
   const handleControlSignal = signalRef => {
