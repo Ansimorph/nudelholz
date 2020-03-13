@@ -4,6 +4,7 @@ import Tone from "tone";
 
 import Layout from "./components/ui/Layout";
 import Title from "./components/ui/Title";
+import Links from "./components/ui/Links";
 import MidiContext from "./midiContext";
 import ModulationContext from "./modulationContext";
 import SawtoothOscillator from "./components/synth/SawtoothOscillator";
@@ -88,6 +89,7 @@ const App = () => {
             triggerEnvelope={setTrigger}
           />
         </Layout>
+        <Links></Links>
       </ModulationContext.Provider>
     </MidiContext.Provider>
   );

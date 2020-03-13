@@ -13,7 +13,6 @@ const StyledGroup = styled("div")`
 const StyledEncoderGroup = styled("div")`
   display: grid;
   grid-gap: var(--grid-gap);
-  grid-template-columns: repeat(auto-fill, var(--encoder-size));
 
   @media (min-width: 600px) {
     grid-auto-flow: column;

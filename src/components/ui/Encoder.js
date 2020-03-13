@@ -44,6 +44,7 @@ const Label = styled("text")`
 
 const ControlElement = styled("article")`
   display: flex;
+  min-height: 118px;
   width: var(--encoder-size);
   flex-direction: column;
   align-items: flex-start;

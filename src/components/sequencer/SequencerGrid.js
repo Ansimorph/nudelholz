@@ -29,7 +29,7 @@ const Button = styled("button")`
 
 const Table = styled("table")`
   display: flex;
-  margin-top: 60px;
+  margin-top: var(--grid-gap);
   margin-left: 2px;
 `;
 
