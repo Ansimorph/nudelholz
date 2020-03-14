@@ -18,8 +18,8 @@ const EnvelopeElement = ({ triggerTime, register }) => {
   const crossFade = useRef();
   let gainControlSignal = useRef();
 
-  const [attack, setAttack] = useState(0.1);
-  const [decay, setDecay] = useState(0.1);
+  const [attack, setAttack] = useState(0.5);
+  const [decay, setDecay] = useState(0.5);
 
   useEffect(() => {
     envelope.current = new Envelope({

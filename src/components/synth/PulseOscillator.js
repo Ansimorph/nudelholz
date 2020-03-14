@@ -35,7 +35,10 @@ const PulseOscillatorElement = ({ frequency, register }) => {
 
   useEffect(() => {
     if (oscillator.current && frequency) {
-      oscillator.current.set("frequency", frequency.frequency, frequency.time);
+      oscillator.current.frequency.setValueAtTime(
+        frequency.frequency,
+        frequency.time
+      );
     }
   }, [frequency]);
 

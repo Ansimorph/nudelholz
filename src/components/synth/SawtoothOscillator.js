@@ -20,7 +20,7 @@ const SawtoothOscillator = ({ frequency, register }) => {
   const [spread, setSpread] = useState(0);
 
   useEffect(() => {
-    oscillator.current = new FatOscillator("C#4", "sawtooth");
+    oscillator.current = new FatOscillator(0, "sawtooth");
     gainNode.current = new Gain();
 
     oscillator.current.connect(gainNode.current);
@@ -36,7 +36,10 @@ const SawtoothOscillator = ({ frequency, register }) => {
 
   useEffect(() => {
     if (oscillator.current && frequency) {
-      oscillator.current.set("frequency", frequency.frequency, frequency.time);
+      oscillator.current.frequency.setValueAtTime(
+        frequency.frequency,
+        frequency.time
+      );
     }
   }, [frequency]);
 

@@ -72,7 +72,7 @@ const EffectsElement = ({ registerInput, registerOutput }) => {
         <SignalEncoder
           label="Fold"
           midiCC={10}
-          defaultValue={0}
+          defaultValue={0.1}
           registerSignal={handleFoldControlSignal}
         ></SignalEncoder>
         <SignalEncoder
