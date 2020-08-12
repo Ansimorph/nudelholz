@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-midi/hooks": "^0.0.10",
+    "@react-midi/hooks": "^1.0.2",
     "@rooks/use-raf": "^3.6.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

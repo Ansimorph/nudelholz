@@ -20,7 +20,7 @@ import PlayButton from "./components/transport/Play";
 import BpmControl from "./components/transport/Bpm";
 
 const App = () => {
-  const [inputs, outputs] = useMIDI();
+  const {inputs, outputs} = useMIDI();
 
   const [frequency, setFrequency] = useState();
 
@@ -36,7 +36,8 @@ const App = () => {
   const [playing, setPlaying] = useState(false);
   const [trigger, setTrigger] = useState();
 
-  const midi = { midiInput: inputs[0], midiOutput: outputs[0] };
+  let midi = { midiInput: inputs[0], midiOutput: outputs[0] };
+
   const modulation = { lfoRef: lfoRef };
   const playState = { playing: playing, onChange: setPlaying };
 

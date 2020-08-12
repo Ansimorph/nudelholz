@@ -1166,10 +1166,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@react-midi/hooks@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@react-midi/hooks/-/hooks-0.0.10.tgz#b984eaafbc5106b90e67b35dfc7c598cc841469d"
-  integrity sha512-5Z+ORQwPailHywYW80qKJ/9qGcJQSi9DasaubY0MMaFS2Gc+Jq4OKtBmv+FjBduDUsgArl1qounxFDwu5BZ8DA==
+"@react-midi/hooks@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@react-midi/hooks/-/hooks-1.0.2.tgz#fea2d9e88b352f0e224485ab47a2eb4016c51dc4"
+  integrity sha512-ZZpMnxnmzze0EEslr7Pyy+n+ovzjqo25OorGTVEsufwkAfRjy4VwlYzttG/TGmT0GaG73qw+5OJ1SF6WWhhplg==
   dependencies:
     uniqid "^5.0.3"
 

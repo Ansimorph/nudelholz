@@ -12,6 +12,7 @@ const SequencerMidiButtons = React.memo(({ clickHandler, xOffset }) => {
 
   const handleButtonPress = () => {
     if (
+      noteEvent &&
       noteEvent.note >= MIDI_START &&
       noteEvent.note <= MIDI_START + MIDI_NUMBER_OF_BUTTONS &&
       noteEvent.on === true &&
